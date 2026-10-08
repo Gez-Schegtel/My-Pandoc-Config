@@ -1,12 +1,54 @@
 % ==============================================================================
 % estilo.tex — Preámbulo LaTeX común de mis PDF
-% Lo carga estilo.yaml con include-in-header. Editá acá el aspecto de todos
-% los documentos.
+%
+% QUÉ ES
+%   Código LaTeX que se agrega al "preámbulo" (la parte de arriba) de cada
+%   documento, antes de que empiece el texto. Define el aspecto: fuentes,
+%   emojis, listas, tablas, cuadros y bloques de código.
+%
+% CÓMO SE USA
+%   No se llama a mano: lo carga estilo.yaml con "include-in-header". Se usa
+%   con:  pandoc -d estilo nota.md -o nota.pdf
+%
+% CÓMO SE EDITA
+%   Cada sección (0 a 6) es independiente. Para sacar algo del estilo, borrá
+%   o comentá la sección entera. En LaTeX, un comentario empieza con "%".
+%   Para ver el LaTeX completo que genera pandoc (con este archivo ya
+%   insertado en el preámbulo), sin compilar el PDF:
+%       pandoc -d estilo nota.md -s -t latex -o nota.tex
+%
+% REQUISITOS (Debian/Ubuntu)
+%   sudo apt install pandoc texlive-luatex texlive-latex-recommended \
+%        texlive-latex-extra texlive-fonts-recommended lmodern \
+%        fonts-noto-color-emoji
+%   - texlive-luatex:         el motor lualatex (secciones 0 y 5 lo necesitan).
+%   - texlive-latex-extra:    trae fvextra (sección 4).
+%   - fonts-noto-color-emoji: los emojis a color (sección 0).
+%
+% SECCIONES
+%   0) Fuente principal y emojis
+%   1) Listas con más aire
+%   2) Tablas con más aire
+%   3) Cuadros para las citas (> en Markdown)
+%   4) Código: cortar las líneas largas
+%   5) Palabras largas sin espacios (URLs, hashes)
+%   6) \needspace (evitar títulos solos al pie de la página)
 % ==============================================================================
 
-% 0) Fuente principal con respaldo: emojis a color (Noto Color Emoji) y
-%    símbolos (DejaVu Sans) cuando Latin Modern Roman no tiene el carácter.
-%    Solo funciona con lualatex; con otro motor no se aplica.
+
+% ------------------------------------------------------------------------------
+% 0) Fuente principal con respaldo: emojis a color y símbolos
+%
+%    Latin Modern Roman (la letra clásica de LaTeX) no tiene emojis ni muchos
+%    símbolos. Con lualatex se le puede decir qué fuente usar "de respaldo"
+%    cuando falta un carácter:
+%      1.º Noto Color Emoji  (emojis a color; "mode=harf" es lo que permite
+%                             dibujarlos en color)
+%      2.º DejaVu Sans       (símbolos como ✓ o →; suele venir instalada)
+%    Con otro motor (pdflatex, xelatex) este bloque no se aplica: "\ifLuaTeX"
+%    lo protege para que no dé error.
+%    Esta línea pisa el "mainfont" que una nota pudiera definir.
+% ------------------------------------------------------------------------------
 \ifLuaTeX
   \directlua{
     luaotfload.add_fallback("emojis",
@@ -15,18 +57,43 @@
   \setmainfont{Latin Modern Roman}[RawFeature={fallback=emojis}]
 \fi
 
-% 1) Listas con más aire entre ítems (Pandoc las deja a 0 pt).
+
+% ------------------------------------------------------------------------------
+% 1) Listas con más aire entre ítems
+%
+%    Pandoc usa \tightlist en las listas "apretadas" (sin líneas en blanco
+%    entre ítems) y las deja con separación 0. Acá se les da 0,55 em
+%    (aprox. media línea) entre ítems. Para más o menos aire, cambiar ese número.
+% ------------------------------------------------------------------------------
 \renewcommand{\tightlist}{%
   \setlength{\itemsep}{0.55em}\setlength{\parskip}{0pt}}
 
-% 2) Tablas con más aire entre filas (el valor por defecto es 1). Se aplica
-%    solo dentro de las tablas: si se pusiera global, también ensancharía las
-%    líneas de autor y fecha del título.
+
+% ------------------------------------------------------------------------------
+% 2) Tablas con más aire entre filas
+%
+%    \arraystretch multiplica la altura de las filas (el valor por defecto es
+%    1; acá 1,5). Se aplica solo dentro de las tablas ("longtable", que es lo
+%    que genera pandoc). Si se pusiera global, también ensancharía las líneas
+%    de autor y fecha del título.
+% ------------------------------------------------------------------------------
 \AddToHook{env/longtable/begin}{\renewcommand{\arraystretch}{1.5}}
 
-% 3) Cuadros "Idea clave / Ojo / Para el examen": barra azul a la
-%    izquierda y fondo celeste pastel, con aire arriba y abajo.
-%    Solo usa LaTeX base y color (sin paquetes extra).
+
+% ------------------------------------------------------------------------------
+% 3) Cuadros para las citas: "Idea clave", "Ojo", "Para el examen"...
+%
+%    Todo bloque de cita de Markdown (las líneas que empiezan con ">") se
+%    dibuja como un cuadro con una barra azul a la izquierda y fondo celeste
+%    pastel, con aire arriba y abajo. OJO: esto cambia TODAS las citas, no se
+%    puede tener a la vez una cita "normal" y un cuadro.
+%
+%    Para cambiar los colores, editar los dos \definecolor (formato RGB, de 0
+%    a 255). El resto arma el cuadro en tres pasos: mide el contenido en una
+%    caja (\cuadrobox), dibuja la barra con la altura de esa caja, y pone la
+%    caja sobre el fondo con 10 pt de margen a cada lado.
+%    Solo usa LaTeX base y color (no necesita paquetes extra).
+% ------------------------------------------------------------------------------
 \definecolor{barcolor}{RGB}{74,111,165}
 \definecolor{fondocolor}{RGB}{232,241,251}
 \newsavebox{\cuadrobox}
@@ -47,9 +114,24 @@
       \hskip 10pt\usebox{\cuadrobox}\hskip 10pt}}}%
   \par\addvspace{10pt}}
 
-% 4) Bloques de código: las líneas largas se cortan en vez de salirse de la
-%    hoja, y la línea que continúa empieza con una flechita (↪).
-%    breakanywhere permite cortar también dentro de una palabra larga.
+
+% ------------------------------------------------------------------------------
+% 4) Bloques de código: las líneas largas se cortan
+%
+%    Sin esto, una línea de código más ancha que la hoja se sale por la
+%    derecha. Con el paquete fvextra, se corta y la línea que continúa empieza
+%    con una flechita (↪).
+%      breaklines            corta las líneas largas
+%      breakanywhere         permite cortar también dentro de una palabra larga
+%      breaknonspaceingroup  hace que ese corte funcione también dentro de los
+%                            textos con color del resaltado de sintaxis (por
+%                            ejemplo, un string muy largo)
+%    Las dos redefiniciones de abajo hacen que lo anterior valga para ambos
+%    tipos de bloque de pandoc: "verbatim" (los que no tienen lenguaje) y
+%    "Highlighting" (los que sí tienen, con colores). Este último solo existe
+%    si la nota tiene código con lenguaje, por eso se pregunta antes con
+%    \ifdefined.
+% ------------------------------------------------------------------------------
 \usepackage{fvextra}
 \fvset{breaklines, breakanywhere, breaknonspaceingroup}
 \RecustomVerbatimEnvironment{verbatim}{Verbatim}{}
@@ -57,12 +139,29 @@
   \RecustomVerbatimEnvironment{Highlighting}{Verbatim}{commandchars=\\\{\}}
 \fi
 
-% 5) Palabras largas sin espacios (URLs, hashes, rutas) en tablas, listas o
-%    párrafos: si no entran en la línea, se cortan entre dos letras en vez de
-%    salirse de la hoja. Solo se aplica a palabras de 20 caracteres o más
-%    seguidos; las palabras normales no se tocan. Solo lualatex.
-%    (Este bloque no puede llevar comentarios de Lua ni los símbolos de
-%    porcentaje, numeral y virgulilla, porque TeX los interpretaría primero.)
+
+% ------------------------------------------------------------------------------
+% 5) Palabras largas sin espacios (URLs, hashes, rutas) en tablas, listas
+%    o párrafos
+%
+%    Una palabra muy larga y sin espacios no tiene dónde cortarse y se sale de
+%    la hoja (típico en las celdas de una tabla). Este bloque le avisa a TeX
+%    que, SOLO en las palabras de 20 caracteres o más seguidos, puede cortar
+%    entre dos letras. Es el último recurso: se pone un "corte muy caro"
+%    (penalización 9000 de 10000) para que TeX lo use únicamente si no hay
+%    otra forma de acomodar la línea. Las palabras normales no se tocan, y
+%    tampoco las fórmulas matemáticas. Solo funciona con lualatex.
+%
+%    Para cambiar desde cuántos caracteres se corta, editar el número de
+%    "local MINIMO". Con menos de 20, empiezan a cortarse palabras comunes.
+%
+%    CUIDADO al editar el código de Lua de abajo: TeX lo lee primero, así que
+%      - no se pueden usar comentarios de Lua (--): TeX junta todas las líneas
+%        en una sola y el comentario taparía el resto del código;
+%      - no se pueden usar los símbolos de porcentaje, numeral ni virgulilla
+%        (tampoco el operador "no igual" de Lua): TeX los interpretaría antes.
+%    Por eso las explicaciones van acá afuera.
+% ------------------------------------------------------------------------------
 \ifLuaTeX
   \directlua{
     local GLYPH = node.id("glyph")
@@ -110,8 +209,17 @@
   }
 \fi
 
-% 6) \needspace{altura}: salta de página si no hay ese espacio libre
-%    (definición del paquete needspace, copiada para no cargar nada).
+
+% ------------------------------------------------------------------------------
+% 6) \needspace{altura}: evitar títulos solos al pie de la página
+%
+%    Uso: en el .md, en una línea suelta justo antes de un título:
+%        \needspace{5cm}
+%    Si quedan menos de 5 cm libres en la página, salta a la siguiente. Sirve
+%    para que un título no quede abandonado al final con su texto en la página
+%    de abajo. Es la definición del paquete "needspace", copiada acá para no
+%    tener que cargar otro paquete. \providecommand la define solo si no existe.
+% ------------------------------------------------------------------------------
 \makeatletter
 \providecommand{\needspace}[1]{\begingroup\setlength{\dimen@}{#1}%
   \vskip\z@\@plus\dimen@\penalty-100\vskip\z@\@plus-\dimen@

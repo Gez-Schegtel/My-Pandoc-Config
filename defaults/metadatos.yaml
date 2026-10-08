@@ -1,6 +1,31 @@
-# Valores por defecto de todos los documentos. Cualquier .md puede cambiar uno
-# poniéndolo en su propia cabecera (por ejemplo, geometry: margin=4cm).
+# ==============================================================================
+# metadatos.yaml — Valores por defecto de todos mis documentos
+#
+# Lo carga estilo.yaml con "metadata-files". Es un YAML común (no lleva las
+# líneas "---" de la cabecera de una nota).
+#
+# Son valores "de base": cualquier nota puede cambiar uno poniéndolo en su
+# propia cabecera, y también se pueden cambiar desde la terminal con -M.
+# Por ejemplo, una nota con tablas anchas puede tener en su cabecera:
+#     geometry: margin=1.5cm
+# ==============================================================================
+
+# Idioma del documento. Define cómo se cortan las palabras al final de línea y
+# los nombres automáticos ("Índice", "Referencias", etc.).
 lang: es
+
+# Márgenes de la hoja (paquete geometry). Acepta también valores por lado,
+# por ejemplo: geometry: top=2cm, bottom=2cm, left=3cm, right=2cm
 geometry: margin=2.2cm
+
+# Tamaño de la letra. LaTeX acepta 10pt, 11pt o 12pt.
 fontsize: 11pt
+
+# Enlaces con color (en vez de recuadros alrededor).
 colorlinks: true
+
+# --- Otras opciones que se suelen poner en la cabecera de UNA nota ------------
+# No van acá porque no se quieren en todos los documentos:
+#   toc: true              índice al principio (toc-depth: 2 limita los niveles)
+#   numbersections: true   numera los títulos (1, 1.1, 1.2, ...)
+# ==============================================================================
