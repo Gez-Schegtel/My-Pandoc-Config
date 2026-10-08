@@ -56,7 +56,7 @@ Lista numerada:
 def saludar(nombre):
     return f"Hola, {nombre}"
 
-print(saludar("mundoooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooo"))
+print(saludar("mundo"))
 ```
 
 # Cambiar algo en una sola nota

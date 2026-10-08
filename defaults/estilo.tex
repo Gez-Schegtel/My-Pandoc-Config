@@ -47,7 +47,17 @@
       \hskip 10pt\usebox{\cuadrobox}\hskip 10pt}}}%
   \par\addvspace{10pt}}
 
-% 4) \needspace{altura}: salta de página si no hay ese espacio libre
+% 4) Bloques de código: las líneas largas se cortan en vez de salirse de la
+%    hoja, y la línea que continúa empieza con una flechita (↪).
+%    breakanywhere permite cortar también dentro de una palabra larga.
+\usepackage{fvextra}
+\fvset{breaklines, breakanywhere, breaknonspaceingroup}
+\RecustomVerbatimEnvironment{verbatim}{Verbatim}{}
+\ifdefined\Highlighting
+  \RecustomVerbatimEnvironment{Highlighting}{Verbatim}{commandchars=\\\{\}}
+\fi
+
+% 5) \needspace{altura}: salta de página si no hay ese espacio libre
 %    (definición del paquete needspace, copiada para no cargar nada).
 \makeatletter
 \providecommand{\needspace}[1]{\begingroup\setlength{\dimen@}{#1}%
