@@ -57,7 +57,60 @@
   \RecustomVerbatimEnvironment{Highlighting}{Verbatim}{commandchars=\\\{\}}
 \fi
 
-% 5) \needspace{altura}: salta de página si no hay ese espacio libre
+% 5) Palabras largas sin espacios (URLs, hashes, rutas) en tablas, listas o
+%    párrafos: si no entran en la línea, se cortan entre dos letras en vez de
+%    salirse de la hoja. Solo se aplica a palabras de 20 caracteres o más
+%    seguidos; las palabras normales no se tocan. Solo lualatex.
+%    (Este bloque no puede llevar comentarios de Lua ni los símbolos de
+%    porcentaje, numeral y virgulilla, porque TeX los interpretaría primero.)
+\ifLuaTeX
+  \directlua{
+    local GLYPH = node.id("glyph")
+    local KERN = node.id("kern")
+    local PENALTY = node.id("penalty")
+    local MATH = node.id("math")
+    local MINIMO = 20
+    local function cortar(head)
+      local enmat = false
+      local n = head
+      while n do
+        if n.id == MATH then
+          enmat = (n.subtype == 0)
+          n = n.next
+        elseif n.id == GLYPH and not enmat then
+          local largo = 0
+          local m = n
+          while m and (m.id == GLYPH or (m.id == KERN and m.subtype == 0)) do
+            if m.id == GLYPH then largo = largo + 1 end
+            m = m.next
+          end
+          if largo >= MINIMO then
+            local c = n
+            while c and not (c == m) do
+              if c.id == GLYPH then
+                local sig = c.next
+                if sig and sig.id == KERN then sig = sig.next end
+                if sig and not (sig == m) and sig.id == GLYPH then
+                  local p = node.new(PENALTY)
+                  p.penalty = 9000
+                  head, c = node.insert_after(head, c, p)
+                end
+              end
+              c = c.next
+            end
+          end
+          n = m
+        else
+          n = n.next
+        end
+      end
+      return head
+    end
+    luatexbase.add_to_callback("pre_linebreak_filter", cortar, "cortar-palabras-largas")
+  }
+\fi
+
+% 6) \needspace{altura}: salta de página si no hay ese espacio libre
 %    (definición del paquete needspace, copiada para no cargar nada).
 \makeatletter
 \providecommand{\needspace}[1]{\begingroup\setlength{\dimen@}{#1}%
