@@ -1,0 +1,22 @@
+# ==============================================================================
+# estilo.yaml — Opciones comunes de pandoc para mis PDF (archivo de "defaults")
+#
+# Uso:
+#   pandoc -d /ruta/a/estilo.yaml archivo.md -o archivo.pdf
+#   md2pdf archivo.md        (usa este mismo archivo)
+#
+# Cada .md solo necesita sus datos propios (title, subtitle, author, date...).
+#   - metadatos.yaml: valores por defecto (márgenes, tamaño de letra, idioma).
+#                     Una nota puede pisarlos desde su propia cabecera.
+#   - estilo.tex:     aspecto (fuentes, emojis, cuadros, listas, tablas).
+# Requiere lualatex (sudo apt install texlive-luatex fonts-noto-color-emoji).
+# ==============================================================================
+
+pdf-engine: lualatex
+highlight-style: tango
+
+metadata-files:
+  - ${.}/metadatos.yaml
+
+include-in-header:
+  - ${.}/estilo.tex

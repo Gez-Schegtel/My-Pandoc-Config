@@ -1,0 +1,6 @@
+# Valores por defecto de todos los documentos. Cualquier .md puede cambiar uno
+# poniéndolo en su propia cabecera (por ejemplo, geometry: margin=4cm).
+lang: es
+geometry: margin=2.2cm
+fontsize: 11pt
+colorlinks: true
