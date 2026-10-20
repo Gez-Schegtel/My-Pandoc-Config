@@ -67,3 +67,9 @@ metadata-files:
 # Código LaTeX que se agrega al preámbulo de cada documento: define el aspecto.
 include-in-header:
   - ${.}/estilo.tex
+
+# Filtro de pandoc (en ../filters/) que parte en filas las fórmulas en bloque
+# ($$ ... $$) que no entran en el ancho de la hoja. Las que entran no se tocan.
+# Cómo funciona y cómo ajustarlo: encabezado de filters/cortar-formulas.lua.
+filters:
+  - ${.}/../filters/cortar-formulas.lua

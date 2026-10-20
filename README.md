@@ -24,6 +24,8 @@ pandoc/                      (esta carpeta es ~/.local/share/pandoc)
 │   ├── estilo.yaml          opciones de pandoc; es el único que se nombra al compilar
 │   ├── metadatos.yaml       valores por defecto: idioma, márgenes, tamaño de letra
 │   └── estilo.tex           aspecto en LaTeX: fuentes, emojis, listas, tablas, cuadros, código
+├── filters/
+│   └── cortar-formulas.lua  filtro de pandoc: parte en filas las fórmulas que no entran en la hoja
 ├── examples/
 │   ├── example_1.md / .pdf  ejemplo básico: todo lo que cubre el estilo
 │   ├── example_2.md / .pdf  tablas y casos que pueden salirse de la hoja
@@ -31,7 +33,7 @@ pandoc/                      (esta carpeta es ~/.local/share/pandoc)
 └── README.md
 ```
 
-La carpeta `defaults/` tiene que llamarse así: es el nombre que pandoc busca. Los tres archivos de adentro tienen que estar juntos, porque `estilo.yaml` encuentra a los otros dos por su ubicación.
+La carpeta `defaults/` tiene que llamarse así: es el nombre que pandoc busca. Los tres archivos de adentro tienen que estar juntos, porque `estilo.yaml` encuentra a los otros dos por su ubicación. `filters/` tiene que estar al lado de `defaults/`: `estilo.yaml` busca el filtro en `../filters/`.
 
 ## Instalación
 
@@ -56,7 +58,7 @@ sudo apt install pandoc texlive-luatex texlive-latex-recommended \
 Pandoc busca sus archivos de configuración en su "carpeta de datos". En Linux es `~/.local/share/pandoc`. Este repositorio **es** esa carpeta:
 
 ```bash
-git clone https://github.com/Gez-Schegtel/My-Pandoc-Config.git ~/.local/share/pandoc
+git clone <URL-del-repositorio> ~/.local/share/pandoc
 ```
 
 Para comprobar que pandoc usa esa carpeta:
@@ -188,6 +190,21 @@ metadatos.yaml  <  cabecera de la nota  <  opción -M del comando
 
 Cada sección está explicada con más detalle en los comentarios del propio archivo.
 
+### Fórmulas largas
+
+Pandoc no corta una fórmula en bloque (`$$ ... $$`) que es más ancha que la hoja: se sale por la derecha. El filtro `filters/cortar-formulas.lua` lo resuelve solo, en todas las notas:
+
+- Estima el ancho de cada fórmula en bloque. Si entra en la hoja, no la toca (ni las fórmulas en línea).
+- Si no entra, la parte en filas cortando en los signos `+` y `-`: el numerador y el denominador de una fracción, o la derecha de la ecuación si no tiene fracción. Un numerador del tipo `\left(A\right) \left(B\right)` se corta dentro del último paréntesis.
+- Si la misma fracción está escrita dos veces seguidas (`a = F = F`), deja una sola.
+- Una parte que ya trae `\\` o `\begin` (cortada a mano) no se toca.
+- Lee el tamaño de letra y los márgenes de la cabecera de la nota (`fontsize`, `geometry: margin=...`, `papersize`), así que se adapta si los cambiás.
+- Si una fórmula sigue sin entrar (por ejemplo, un solo término larguísimo), avisa por pantalla.
+
+Para ver qué fórmulas corta y con qué ancho: `CORTAR_FORMULAS_DEBUG=1 pandoc -d estilo nota.md -o nota.pdf`. Para apagarlo, borrar o comentar el bloque `filters:` de `estilo.yaml`. Los umbrales están al principio del filtro.
+
+Es una estimación (error de ±2 % en fórmulas anchas), y se calibró con fórmulas de funciones de transferencia: con símbolos poco comunes puede cortar de más o de menos.
+
 ## Modificar el estilo
 
 | Quiero... | Dónde |
@@ -197,6 +214,7 @@ Cada sección está explicada con más detalle en los comentarios del propio arc
 | Cambiar los colores de los cuadros | los dos `\definecolor` de la sección 3 de `defaults/estilo.tex` |
 | Más o menos aire en listas o tablas | secciones 1 y 2 de `defaults/estilo.tex` |
 | Sacar algo del estilo | borrar o comentar su sección en `defaults/estilo.tex` |
+| Que no se corten las fórmulas largas | comentar el bloque `filters:` de `defaults/estilo.yaml` |
 | Tener un segundo estilo (por ejemplo, uno compacto) | crear otro `.yaml` en `defaults/` y usarlo así: `pandoc -d estilo -d compacto nota.md -o nota.pdf` |
 
 Después de cambiar el estilo, conviene volver a generar los PDF de los ejemplos:
@@ -225,4 +243,6 @@ En `examples/` hay tres notas con su PDF ya generado, para ver el resultado sin 
 | `lualatex not found. Please select a different --pdf-engine...` | Falta el motor: `sudo apt install texlive-luatex`. |
 | Los emojis salen en blanco, en negro o no salen | Falta la fuente: `sudo apt install fonts-noto-color-emoji`. |
 | No se genera ningún PDF, error con `lmodern` | `sudo apt install lmodern texlive-fonts-recommended`. |
+| Una fórmula se sale de la hoja | Mirá si el filtro avisó por pantalla. Si tiene un solo término larguísimo o no tiene `+` ni `-` con espacios alrededor, no hay dónde cortar: hay que partirla a mano con `\begin{aligned} ... \\ ... \end{aligned}`. |
+| `Could not find filter` o error del filtro | `filters/` tiene que estar al lado de `defaults/`. Para probar sin el filtro, comentar `filters:` en `estilo.yaml`. |
 | Error de Lua o de `\directlua` | Mirá la sección 5 de `estilo.tex`. Si no lo necesitás, se puede borrar esa sección: el resto sigue funcionando. |
