@@ -6,16 +6,23 @@ date: "Octubre de 2026"
 toc: true
 toc-depth: 4
 numbersections: true
+geometry: margin=2.6cm
 geometry: margin=2.4cm
 mainfont: Libertinus Serif
+sansfont: Inter
+monofont: JetBrains Mono
 linestretch: 1.15
+documentclass: scrartcl
+classoption: numbers=enddot
 ---
 
 \newpage
 
-# 0. Cómo usar este apunte
+![](./logo_utn.png)
 
-## 0.1 Qué cubre
+# Cómo usar este apunte
+
+## Qué cubre
 
 Este apunte integra, explica y completa las cuatro presentaciones de la Unidad I 🤟🏻:
 
@@ -26,7 +33,7 @@ Este apunte integra, explica y completa las cuatro presentaciones de la Unidad I
 
 No es un resumen de las slides: busca que *entiendas* cada tema, por eso incluye explicaciones, ejemplos resueltos, tablas comparativas, casos con respuesta modelo y una autoevaluación con respuestas al final.
 
-## 0.2 Convenciones (cómo distinguir qué es de la cátedra y qué agregué yo)
+## Convenciones (cómo distinguir qué es de la cátedra y qué agregué yo)
 
 > **Idea clave.** Lo esencial de cada tema; si solo podés recordar una cosa, que sea esta.
 
@@ -40,7 +47,7 @@ No es un resumen de las slides: busca que *entiendas* cada tema, por eso incluye
 
 Lo que sale de las presentaciones va sin marca; lo que agregué va señalado como *Extra*, *Respuesta modelo* o *(aporte mío)*. Las aclaraciones menores de redacción, hechas solo para que se entienda mejor, no se marcan. Las cifras de los ejemplos resueltos fueron recalculadas, y las de complejidad ciclomática verificadas con una herramienta real (ESLint).
 
-## 0.3 Mapa de la unidad
+## Mapa de la unidad
 
 | Cap. | Tema | Presentación de origen | Tenés que poder... |
 |:--|:----------------|:-----------------|:------------------------------------------|
@@ -56,11 +63,11 @@ Lo que sale de las presentaciones va sin marca; lo que agregué va señalado com
 | 10 | Autoevaluación | — | Practicar (respuestas en el Anexo A) |
 | 11 | Errores frecuentes | — | Evitar las confusiones clásicas |
 
-## 0.4 El hilo conductor (la historia de la unidad en un párrafo)
+## El hilo conductor (la historia de la unidad en un párrafo)
 
 La calidad no es una cosa única: depende de *para quién* y *respecto de qué requisitos* se mide (cap. 1), y en software se puede mirar desde cinco perspectivas distintas (cap. 2). Dos de esas miradas son especialmente importantes: la calidad del **producto** y la del **proceso** (cap. 3). Un producto puede funcionar y aun así estar mal construido por dentro (cap. 4), y esa mala construcción se acumula como **deuda técnica** que se paga con intereses (cap. 5). Además, un proceso impecable no garantiza un buen producto (cap. 6). Todo esto se traduce en **plata**, y se puede medir (cap. 7). Por último, la **Calidad Total** propone una forma de gestionar la organización entera para que la calidad no dependa de la suerte ni de esfuerzos aislados (cap. 8).
 
-## 0.5 Sugerencia de estudio
+## Sugerencia de estudio
 
 1. **Primera pasada:** leé los capítulos 1 a 8 con calma y hacé los cuadros a mano al menos una vez (perspectivas, QA/QC, cuadrante de deuda, cuatro costos, ocho principios).
 2. **Segunda pasada:** mirá solo los recuadros *Idea clave*, *Ojo* y *Para el examen*, y el Anexo C (resumen y fórmulas).
@@ -68,9 +75,9 @@ La calidad no es una cosa única: depende de *para quién* y *respecto de qué r
 
 \newpage
 
-# 1. ¿Qué es la calidad?
+# ¿Qué es la calidad?
 
-## 1.1 La definición oficial (ISO 9000:2015)
+## La definición oficial (ISO 9000:2015)
 
 > **Calidad** es el *grado* en el que un conjunto de *características inherentes* de un *objeto* cumple con los *requisitos*. — ISO 9000:2015
 
@@ -91,7 +98,7 @@ De esta definición se desprenden tres ideas:
 
 > **Extra (no está en las slides).** ISO distingue las características *inherentes* (existen en el objeto de manera permanente, como el rendimiento de un sistema) de las *asignadas* (se le atribuyen desde afuera, como el precio o quién es su propietario). La calidad se evalúa sobre las inherentes.
 
-## 1.2 La calidad es relativa: ¿"calidad" para quién?
+## La calidad es relativa: ¿"calidad" para quién?
 
 La presentación lo ilustra con dos hamburguesas:
 
@@ -108,7 +115,7 @@ La conclusión de la slide: **la calidad depende de las necesidades, expectativa
 
 > **Ojo.** Cuando en el examen aparezca "la calidad es subjetiva", la idea no es que "cada uno opina lo que quiere", sino que **los requisitos cambian según quién los plantea**.
 
-## 1.3 La frase de Crosby: "La calidad no cuesta"
+## La frase de Crosby: "La calidad no cuesta"
 
 > *"La calidad no cuesta. No es un regalo, pero es gratuita. Lo que cuesta dinero son las cosas que no tienen calidad: todas las acciones que resultan de no hacer bien las cosas la primera vez."* — Philip B. Crosby
 
@@ -122,7 +129,7 @@ Esta idea es el puente directo al capítulo 7 (costos de la calidad y de la no c
 
 > **Extra (no está en las slides).** La frase proviene del libro *Quality Is Free* (1979). Crosby asociaba esta idea con el objetivo de "cero defectos" y con "hacerlo bien a la primera".
 
-## 1.4 Para recordar
+## Para recordar
 
 - Calidad (ISO 9000:2015) = **grado** en que las **características inherentes** de un **objeto** cumplen los **requisitos** (necesidades, expectativas, obligaciones).
 - La calidad es **relativa a los requisitos de quien la evalúa** (hamburguesas).
@@ -130,9 +137,9 @@ Esta idea es el puente directo al capítulo 7 (costos de la calidad y de la no c
 
 \newpage
 
-# 2. Calidad de software y sus cinco perspectivas
+# Calidad de software y sus cinco perspectivas
 
-## 2.1 La definición de calidad de software (IEEE)
+## La definición de calidad de software (IEEE)
 
 > La calidad del software es el **grado** con el que un **sistema, componente o proceso** cumple los **requerimientos especificados** y las **necesidades o expectativas** del cliente o usuario. — IEEE
 
@@ -146,7 +153,7 @@ Comparada con la de ISO:
 
 La definición de IEEE hace explícito algo que en ISO está implícito: **cumplir lo escrito no alcanza**; también hay que responder a lo que la persona realmente necesita y espera.
 
-## 2.2 El verdadero desafío: lo que se pide no siempre es lo que se necesita
+## El verdadero desafío: lo que se pide no siempre es lo que se necesita
 
 La slide lo plantea con dos globos de diálogo:
 
@@ -157,7 +164,7 @@ Y concluye: **un software de calidad no solo cumple lo especificado; también re
 
 > **Extra (ejemplo propio).** Un área comercial pide "un listado de ventas exportable a Excel". El sistema lo entrega perfecto (cumple lo especificado). Pero lo que el área necesitaba era *decidir qué mercadería reponer*, y para eso el listado no sirve. El software cumplió el requerimiento y falló la necesidad. Esta tensión es exactamente la que más adelante en la carrera vas a ver como diferencia entre **verificación** (¿construimos bien lo especificado?) y **validación** (¿construimos lo que realmente se necesitaba?).
 
-## 2.3 Las cinco perspectivas
+## Las cinco perspectivas
 
 La presentación insiste: **la calidad del software no tiene una única mirada.** Hay cinco perspectivas, y cada una responde una pregunta distinta.
 
@@ -212,7 +219,7 @@ La presentación insiste: **la calidad del software no tiene una única mirada.*
 
 > **Extra (no está en las slides).** Estas cinco perspectivas vienen de los "cinco enfoques de la calidad" de David Garvin (1984), que luego Kitchenham y Pfleeger (1996) aplicaron al software. En la bibliografía las vas a encontrar con otros nombres: *trascendente*, *basada en el producto*, *basada en el usuario*, *basada en la fabricación* (equivale a "proceso") y *basada en el valor*. Por eso el examen puede decir "perspectiva basada en el producto" o "basada en el usuario": son las mismas cinco, con el nombre de la bibliografía.
 
-## 2.4 El multiverso de la calidad: un software, cinco miradas
+## El multiverso de la calidad: un software, cinco miradas
 
 La presentación cierra con una consigna: *"Un mismo software. Cinco miradas. ¿Una sola calidad?"* (la actividad grupal consiste en representar, con personajes como usuario, desarrollador, líder de proyecto, QA y negocio, un conflicto real sobre si "este software es de calidad... ¿o no?").
 
@@ -236,7 +243,7 @@ Ejemplos de conflicto:
 
 > **Extra (ejemplo para fijar las cinco, con una app de homebanking).** *Producto:* el tiempo de respuesta en transferencias es menor a 2 segundos y no hay defectos críticos abiertos. *Proceso:* cada cambio pasa por revisión de código, pruebas automáticas y trazabilidad al requerimiento. *Personas:* una persona mayor puede transferir sola desde el celular y con lector de pantalla. *Valor:* se prioriza seguridad y confiabilidad de las transferencias sobre animaciones vistosas. *Trascendental:* la app "se siente sólida": todo es coherente, genera confianza y nunca falla en el momento importante.
 
-## 2.5 Para recordar
+## Para recordar
 
 - **IEEE:** calidad de software = grado en que cumple los **requerimientos especificados** *y* las **necesidades o expectativas** del usuario.
 - **Desafío central:** lo que se pide $\neq$ lo que se necesita.
@@ -245,9 +252,9 @@ Ejemplos de conflicto:
 
 \newpage
 
-# 3. Calidad del producto, calidad del proceso, QA y QC
+# Calidad del producto, calidad del proceso, QA y QC
 
-## 3.1 Dos caras de la misma moneda
+## Dos caras de la misma moneda
 
 La segunda presentación abre con un título directo: **la calidad del software integra la calidad del producto y la calidad del proceso.**
 
@@ -260,7 +267,7 @@ La segunda presentación abre con un título directo: **la calidad del software 
 
 > **Ojo (dos usos de la palabra "producto").** En la presentación de *Introducción*, la "perspectiva de producto" se centra en las **características medibles** (complejidad, defectos, rendimiento). En *Aspectos*, la "calidad del producto" es más amplia: incluye si el producto cumple requisitos y *satisface a las personas usuarias*. Una forma de reconciliarlo (interpretación mía): "calidad del producto" es el **resultado completo** que se entrega y se puede evaluar desde varias perspectivas, mientras que la "perspectiva de producto" es **una** de esas lentes (la de las propiedades medibles). Si preguntan "¿qué describe la perspectiva basada en el producto?", respondé con la de *Introducción* (propiedades medibles).
 
-## 3.2 El proceso influye, pero no garantiza
+## El proceso influye, pero no garantiza
 
 La idea más importante de este capítulo está en la slide "Proceso y producto: dos miradas de la calidad":
 
@@ -276,7 +283,7 @@ La idea más importante de este capítulo está en la slide "Proceso y producto:
 
 La frase de cierre del Aspecto 03 lo resume: **cumplir el proceso $\neq$ garantizar la calidad** (se analiza con casos en el capítulo 6).
 
-## 3.3 QA vs. QC
+## QA vs. QC
 
 Una de las confusiones más frecuentes es mezclar *Quality Assurance* (QA) con *Quality Control* (QC). La cátedra lo resume así: **prevenir en el proceso, verificar en el producto.**
 
@@ -297,7 +304,7 @@ Y dos frases para llevarse:
 
 > **Extra.** El límite entre QA y QC no es nítido: un code review previene defectos futuros (QA) pero también encuentra defectos en el código (QC). Lo que decide es el **foco**. Regla práctica: *si la actividad busca que el defecto no aparezca, es QA; si busca encontrar el que ya existe, es QC.*
 
-## 3.4 Para recordar
+## Para recordar
 
 - La calidad del software **integra** producto y proceso.
 - **Proceso crea condiciones; producto confirma la calidad.** Influye, pero no garantiza.
@@ -305,9 +312,9 @@ Y dos frases para llevarse:
 
 \newpage
 
-# 4. Calidad interna del código y complejidad ciclomática
+# Calidad interna del código y complejidad ciclomática
 
-## 4.1 Que funcione no significa que esté bien construido
+## Que funcione no significa que esté bien construido
 
 El *Aspecto 01* de la presentación muestra un auto deportivo que arranca y muestra "ÉXITO" en el tablero... pero con el chasis abierto y un enjambre de cables enredados por dentro. La pregunta que deja la slide es la importante: **¿qué pasaría cuando haya que modificarlo?**
 
@@ -331,7 +338,7 @@ La slide da cuatro razones, y conviene entender la lógica de cada una:
 
 > **Ojo (por qué el usuario "no ve" este problema).** Mientras nadie toque el código, la mala calidad interna es invisible. Se manifiesta cuando hay que *cambiar*: entonces aparecen los retrasos, los errores nuevos y los "esto era para unas horas" que terminan siendo días. Por eso es una trampa decir "funciona perfecto, ¿cuál es el problema?".
 
-## 4.2 Caso para analizar: los 17 lugares y las 600 líneas
+## Caso para analizar: los 17 lugares y las 600 líneas
 
 **Escenario (resumen de la slide).** Una empresa de comercio electrónico usa desde hace cuatro años un sistema propio de gestión de pedidos. Procesa más de **8.000 pedidos por día** y los clientes compran, pagan, reciben confirmación y consultan el envío sin inconvenientes. El gerente dice: *"No entiendo por qué el equipo de desarrollo insiste en que tenemos problemas con el sistema. Los clientes compran todos los días y funciona perfectamente."*
 
@@ -357,7 +364,7 @@ La empresa lanza una campaña y pide un cambio "simple": **envío gratis para cl
 
 > **Extra.** Un método de 600 líneas que mezcla pedidos, descuentos, stock, envío y facturación casi seguro tiene una **complejidad ciclomática muy alta** (es una inferencia mía, el enunciado no da el número). Y el caso es un ejemplo perfecto de **deuda técnica**: la diferencia entre "unas horas" y "seis días" es el **interés** que se está pagando (capítulo 5).
 
-## 4.3 Complejidad ciclomática
+## Complejidad ciclomática
 
 ### Qué mide
 
@@ -462,7 +469,7 @@ Con cuatro funciones auxiliares (una por regla), medidas con la misma herramient
 
 > **Extra (la fórmula "formal").** En teoría de grafos, la complejidad ciclomática se define como $V(G) = E - N + 2P$, con $E$ aristas, $N$ nodos y $P$ componentes conexos del grafo de flujo de control. Para un programa estructurado con una sola entrada y una sola salida, da lo mismo que "decisiones + 1". Es la que vas a ver en caja blanca cuando dibujen el grafo.
 
-## 4.4 Para recordar
+## Para recordar
 
 - **Funciona $\neq$ está bien construido.** La calidad interna se nota al **cambiar**.
 - Calidad interna: código **claro, modular, comprensible, fácil de modificar** $\rightarrow$ menos errores, más mantenibilidad, menos costos, más evolución.
@@ -471,9 +478,9 @@ Con cuatro funciones auxiliares (una por regla), medidas con la misma herramient
 
 \newpage
 
-# 5. Deuda técnica
+# Deuda técnica
 
-## 5.1 La metáfora: "lo que no se corrige hoy se paga mañana... con intereses"
+## La metáfora: "lo que no se corrige hoy se paga mañana... con intereses"
 
 El *Aspecto 02* abre con una frase y una pregunta: **"Lo que no se corrige hoy se paga mañana... con intereses."** / **"¿Cuánto cuesta realmente una decisión técnica apresurada?"**
 
@@ -494,7 +501,7 @@ El caso de los 17 lugares es un buen ejemplo: pasar de "unas horas" a "seis día
 
 > **Ojo (qué no es deuda técnica).** No es "el dinero que se gasta en licencias y herramientas" ni "un bug que hay que arreglar". Es **trabajo futuro adicional** causado por una decisión (consciente o no) que priorizó lo inmediato por sobre la calidad interna. (Este tema apareció en el parcial 2025.)
 
-## 5.2 No toda deuda es igual: el cuadrante
+## No toda deuda es igual: el cuadrante
 
 La slide propone clasificar la deuda con dos ejes:
 
@@ -517,7 +524,7 @@ Cómo leer cada cuadrante (interpretación mía):
 
 > **Extra (no está en las slides).** Este cuadrante es el *Technical Debt Quadrant* de Martin Fowler (2009): *imprudente/prudente* × *deliberada/inadvertida* (en inglés: *reckless/prudent* × *deliberate/inadvertent*). La metáfora de "deuda técnica" fue propuesta por Ward Cunningham en 1992.
 
-## 5.3 Costos visibles e invisibles de la no calidad: el iceberg
+## Costos visibles e invisibles de la no calidad: el iceberg
 
 La slide dibuja un iceberg: **solo se ve la punta.** Lo que se registra en un presupuesto suele ser una pequeña parte del costo real.
 
@@ -535,7 +542,7 @@ La pregunta que deja la slide: **¿qué costos estamos midiendo y cuáles perman
 
 > **Para el examen.** Un patrón de pregunta posible: "¿cuál de estos es un costo invisible?" Los invisibles son los **difíciles de medir y de atribuir a un defecto concreto** (confianza, reputación, desgaste, oportunidades). Los visibles son los que aparecen directamente en horas, facturas o tickets (corrección, retrabajo, soporte, garantías).
 
-## 5.4 Cómo se ve la deuda en las herramientas
+## Cómo se ve la deuda en las herramientas
 
 La presentación muestra capturas de **SonarQube** (herramienta de análisis estático) y un gráfico de acumulación. Para interpretar lo que muestran:
 
@@ -554,7 +561,7 @@ La presentación muestra capturas de **SonarQube** (herramienta de análisis est
 
 El **gráfico "Accumulation of Technical Debt"** muestra 20 *releases*: lo que se agrega en cada versión es relativamente poco, pero la **deuda agregada total sube de manera sostenida** (aproximadamente de 100 a 320 ítems). Es la imagen del interés compuesto: **si no se paga, se acumula.**
 
-## 5.5 Cómo gestionar la deuda: hacerla visible
+## Cómo gestionar la deuda: hacerla visible
 
 El título de la slide es la idea: **"Hacerla visible para poder gestionarla."** Son cuatro pasos:
 
@@ -574,7 +581,7 @@ Dos mensajes finales de la slide:
 
 > **Ojo.** "Reducir" incluye **pruebas** como parte del paso: refactorizar sin red de seguridad (pruebas) es otra forma de crear problemas nuevos. Y los tiempos de reducción se negocian **dentro de la capacidad del sprint**: no es algo que se hace "cuando sobre tiempo".
 
-## 5.6 Para recordar
+## Para recordar
 
 - **Deuda técnica** = deficiencias acumuladas en calidad interna que **encarecen** modificar, mantener y evolucionar el software. El **interés** = esfuerzo adicional de cada cambio.
 - **Cuadrante:** excesiva/arriesgada vs. moderada $\times$ voluntaria vs. involuntaria. Importa *cómo se genera*, *cuánto riesgo* y *si hay plan de pago*.
@@ -583,9 +590,9 @@ Dos mensajes finales de la slide:
 
 \newpage
 
-# 6. Cumplir el proceso no garantiza la calidad (Aspecto 03)
+# Cumplir el proceso no garantiza la calidad (Aspecto 03)
 
-## 6.1 La tesis
+## La tesis
 
 El *Aspecto 03* se titula: **"Gestionar el proceso es parte de la solución. No es suficiente."**
 
@@ -595,7 +602,7 @@ El *Aspecto 03* se titula: **"Gestionar el proceso es parte de la solución. No 
 
 Dos escenarios de la presentación lo muestran con casos concretos. Conviene saber resolverlos, porque son el tipo de razonamiento que se pide en un parcial teórico-práctico.
 
-## 6.2 Escenario: el "semáforo verde"
+## Escenario: el "semáforo verde"
 
 **El caso (resumen).** Una empresa desarrolla una plataforma de **autogestión para una universidad**. Durante seis meses el director del proyecto informa al comité que **todos los indicadores están en verde**: el 95 % de las tareas del sprint se completan a tiempo, se hacen las reuniones de Scrum y las retrospectivas, cada requerimiento tiene responsable y estado en Jira, los entregables salen en fecha, el presupuesto se respeta, los riesgos están registrados y la documentación está al día. La dirección considera al proyecto "bien gestionado".
 
@@ -624,7 +631,7 @@ En la reunión posterior, el director vuelve a mostrar el tablero (plazos, costo
 > 6. *¿Qué debería incorporarse además de la gestión?* **Medición de calidad del producto** (rendimiento, errores, cobertura), **pruebas de performance/carga y de usabilidad/accesibilidad desde temprano**, criterios de calidad en la *Definition of Done*, *quality gates*, **validación con usuarios reales**, métricas de experiencia (satisfacción, éxito de tareas) y **decisiones basadas en evidencia**. Es decir: QA (prevenir en el proceso) *y* QC (verificar en el producto).
 > 7. *Frase resumen:* "**Cumplir el proceso no garantiza la calidad**" (o "se gestionó el proyecto, no la calidad del producto").
 
-## 6.3 Escenario: "La empresa certificada"
+## Escenario: "La empresa certificada"
 
 **El caso (resumen).** Una empresa de software participa de una **licitación** para construir una plataforma de **gestión de turnos médicos**. En su presentación comercial destaca: **certificación de su sistema de gestión de calidad**, procesos de desarrollo documentados, procedimientos formales de gestión de cambios, auditorías internas periódicas, registros de incidencias y acciones correctivas, indicadores de cumplimiento de procesos y personal capacitado con roles definidos. El contratante lo considera una **garantía importante** y le adjudica el proyecto. El desarrollo se hace siguiendo los procedimientos, los documentos se generan, las revisiones se registran y **las auditorías internas no detectan incumplimientos significativos**.
 
@@ -644,7 +651,7 @@ En la reunión de seguimiento, el contratante pregunta: *"¿Cómo puede ocurrir 
 
 > **Extra (no está en las slides).** En la práctica, una certificación como ISO 9001 se otorga a un **sistema de gestión de calidad** de una organización, no a un producto concreto. Existen también certificaciones o evaluaciones **de producto** (con ensayos sobre el producto), pero son otra cosa. Y la slide de Principios lo dice con todas las letras: *implementar un SGC no significa necesariamente certificar una norma* (capítulo 8).
 
-## 6.4 Qué evidencia pedir: proceso vs. producto
+## Qué evidencia pedir: proceso vs. producto
 
 Una forma práctica de no caer en la trampa es distinguir **qué tipo de evidencia** se está mirando:
 
@@ -658,7 +665,7 @@ Una forma práctica de no caer en la trampa es distinguir **qué tipo de evidenc
 
 > **Idea clave.** Las dos columnas son necesarias. **Evidencia de proceso sin evidencia de producto** produce el "semáforo verde" que no ve los problemas. **Evidencia de producto sin proceso** detecta defectos pero no evita que vuelvan a aparecer.
 
-## 6.5 Para recordar
+## Para recordar
 
 - **Cumplir el proceso $\neq$ garantizar la calidad.** El proceso crea las condiciones; el producto confirma la calidad.
 - **Semáforo verde:** indicadores de gestión en verde pueden convivir con un producto deficiente si no se mide la calidad del producto ni la experiencia de usuario.
@@ -667,17 +674,17 @@ Una forma práctica de no caer en la trampa es distinguir **qué tipo de evidenc
 
 \newpage
 
-# 7. Costos de la calidad y de la no calidad
+# Costos de la calidad y de la no calidad
 
 > *"Invertir para prevenir, medir para decidir."* — lema de la presentación
 
-## 7.1 Qué son y para qué sirven
+## Qué son y para qué sirven
 
 Los **costos de la calidad** son **los recursos invertidos para prevenir y evaluar defectos, más los costos provocados por fallas internas y externas.**
 
 El **objetivo** de analizarlos no es "gastar menos" a ciegas, sino **identificar dónde se consume el dinero y decidir dónde conviene invertir.**
 
-## 7.2 Las cuatro categorías
+## Las cuatro categorías
 
 Se ordenan siguiendo la vida de un defecto: se intenta **evitar** que aparezca, se lo **busca**, se lo **corrige antes de entregar** o, si se escapó, lo **sufre el usuario**.
 
@@ -699,7 +706,7 @@ Hacete estas preguntas en orden:
 
 > **Extra (no está en las slides).** Este esquema se conoce como modelo **PAF** (*Prevention – Appraisal – Failure*), asociado a Feigenbaum; Crosby lo expresa como "precio de la conformidad" y "precio de la no conformidad". Un detalle fino: las pruebas **planificadas** son evaluación, pero **repetir** pruebas porque hubo que corregir un defecto se suele contar como falla interna.
 
-## 7.3 Conformidad y no conformidad
+## Conformidad y no conformidad
 
 Las cuatro categorías se agrupan en dos grandes bloques:
 
@@ -722,7 +729,7 @@ La frase que lo resume: **"La calidad se paga al prevenir y evaluar; la no calid
 
 > **Para el examen.** En el parcial 2025 se preguntó cuáles son "costos de la calidad": *formación del personal en testing* (prevención), *inspecciones de código y revisiones de diseño* (evaluación) y *pérdida de ventas por mala reputación* (falla externa). Las tres pertenecen al modelo. Cuando una pregunta dice "marcar la/s correcta/s", **puede haber más de una**.
 
-## 7.4 Caso real: CrowdStrike (2024)
+## Caso real: CrowdStrike (2024)
 
 Para mostrar que la no calidad puede ser carísima, la presentación cita el caso **CrowdStrike**: una **actualización defectuosa** provocó una **interrupción global de sistemas Windows** y **pérdidas directas estimadas en US\$ 5.400 millones entre empresas Fortune 500 afectadas** (fuente de la slide: CrowdStrike y Parametrix, 2024).
 
@@ -730,7 +737,7 @@ Para mostrar que la no calidad puede ser carísima, la presentación cita el cas
 
 > **Extra.** El incidente ocurrió el 19 de julio de 2024.
 
-## 7.5 Cómo medir el costo de la no calidad: COPQ
+## Cómo medir el costo de la no calidad: COPQ
 
 **COPQ** (*Cost of Poor Quality*) es el **costo total ocasionado por productos, procesos o servicios que no cumplen con la calidad esperada** (en español: costo de la mala calidad o costo de la no calidad).
 
@@ -758,7 +765,7 @@ Datos: ingresos US\$ 500.000; fallas internas US\$ 12.000; fallas externas US\$ 
 
 **Lectura clave de la slide:** el COPQ muestra **cuánto pierde la organización por fallas y dónde se concentra esa pérdida.** Acá, la mayor parte (70 %) se concentra en fallas externas: el problema es que los defectos se están escapando hacia los usuarios.
 
-## 7.6 Indicadores económicos de la calidad
+## Indicadores económicos de la calidad
 
 La cátedra presenta cinco indicadores. Los números del ejemplo posterior son míos, para que veas cómo se interpretan.
 
@@ -781,7 +788,7 @@ La cátedra presenta cinco indicadores. Los números del ejemplo posterior son m
 - Si el costo total asociado a fallas fue US\$ 75.000: costo por defecto = 75.000 ÷ 200 = **US\$ 375**.
 - Si se dedicaron 480 horas de retrabajo sobre 3.200 horas totales: retrabajo = 480 ÷ 3.200 × 100 = **15 %**.
 
-## 7.7 Caso práctico: Proyecto Ágora
+## Caso práctico: Proyecto Ágora
 
 **Enunciado.** Ágora es una plataforma SaaS de gestión académica. Presupuesto total del proyecto: **US\$ 200.000**. Costos asociados a la calidad durante una versión anual:
 
@@ -819,7 +826,7 @@ La cátedra presenta cinco indicadores. Los números del ejemplo posterior son m
 
 > **Ojo (dos porcentajes que se confunden).** La slide muestra que el **costo total de calidad es 35 % del presupuesto** (70.000 ÷ 200.000). Pero el **indicador "COPQ sobre el proyecto"** de la slide anterior usa solo las fallas: aplicándolo da (18.000 + 32.000) ÷ 200.000 × 100 = **25 %** (cálculo mío). No son lo mismo: uno incluye prevención y evaluación; el otro no. Y el "COPQ sobre ingresos" del ejemplo SaaS divide por **ingresos**, no por presupuesto. **Siempre fijate cuál es el denominador.**
 
-## 7.8 Para recordar
+## Para recordar
 
 - **Cuatro categorías:** prevención, evaluación (**conformidad**) y fallas internas, fallas externas (**no conformidad = COPQ**).
 - **Costo total de la calidad = conformidad + no conformidad.**
@@ -829,13 +836,13 @@ La cátedra presenta cinco indicadores. Los números del ejemplo posterior son m
 
 \newpage
 
-# 8. Calidad Total y los ocho principios
+# Calidad Total y los ocho principios
 
-## 8.1 ¿Alcanza con que el software funcione?
+## ¿Alcanza con que el software funcione?
 
 La presentación abre con una imagen: una pantalla muestra **"Pago aprobado"**... pero alrededor hay una caja abierta que no llegó bien, un paquete cuya entrega ya está fuera de fecha, una persona frustrada hablando con soporte y un equipo desbordado. El software "funciona", pero **la experiencia completa falla**. La calidad no se agota en que una función ande: involucra a clientes, equipos y a toda la organización. De ahí la idea de **calidad total**.
 
-## 8.2 Definición de Calidad Total
+## Definición de Calidad Total
 
 > La calidad total se define como la **excelencia** en los productos o servicios que satisface las **expectativas del cliente**, tanto **interno** como **externo**, lograda con el **menor costo posible** y en armonía con el **entorno social**, dentro de un **proceso continuo**. Esto se debe, entre otras causas, a que las expectativas de los clientes son **cambiantes** y presentan niveles de exigencia **cada vez mayores**, teniendo como **objetivo final la supervivencia de la organización**.
 
@@ -857,7 +864,7 @@ La slide siguiente la desglosa en cinco ideas:
 > - Se dice **"total"** porque abarca a **toda** la organización (no solo al área de calidad), **todas** las etapas y **todas** las personas.
 > - Que el objetivo final sea la **supervivencia** explica el resto: si las expectativas suben y la organización no mejora, eventualmente deja de ser competitiva.
 
-## 8.3 Los ocho principios, de un vistazo
+## Los ocho principios, de un vistazo
 
 Roadmap de la clase (el subtítulo de cada principio) y pregunta orientadora (de la Guía del TP de Auditoría Forense):
 
@@ -880,7 +887,7 @@ La frase que cierra el roadmap: **"Del valor esperado por el cliente a un sistem
 
 **Cómo memorizarlos (aporte mío).** Un recorrido lógico: primero *para quién* (1 cliente), luego *quién guía* (2 liderazgo), *quién lo hace* (3 personas), *cómo se organiza el trabajo* (4 procesos) y *el sistema que lo sostiene* (5 SGC), después *cómo aprende* (6 mejora, 7 evidencia) y, por último, *quién más participa desde afuera* (8 proveedores).
 
-## 8.4 Principio 1 — Orientación al cliente
+## Principio 1 — Orientación al cliente
 
 *"La calidad comienza por comprender qué necesita lograr el cliente."* — *No diseñamos funciones: diseñamos experiencias que deben generar valor.*
 
@@ -911,7 +918,7 @@ La frase que cierra el roadmap: **"Del valor esperado por el cliente a un sistem
 
 > **Para el examen.** El parcial 2025 preguntó qué implica el "enfoque al cliente" en TQM. La respuesta correcta: **entender y satisfacer tanto las necesidades actuales como las futuras de los clientes internos y externos.** Descartaba "priorizar *únicamente* lo que los clientes piden explícitamente" (ignora lo implícito) y "implementar un sistema de tickets" (es una herramienta, no el principio).
 
-## 8.5 Principio 2 — Liderazgo y compromiso con la calidad
+## Principio 2 — Liderazgo y compromiso con la calidad
 
 *"La calidad empieza con el ejemplo."*
 
@@ -939,7 +946,7 @@ La frase que cierra el roadmap: **"Del valor esperado por el cliente a un sistem
 
 > **Respuesta modelo.** Se incumplen las cinco señales casi a la vez: discurso sin ejemplo (exige rapidez pero no participa), falta de recursos (posterga las mejoras), y cultura de culpa (responsabiliza al equipo). La calidad es hoy "un mensaje": en el momento de elegir entre calidad y urgencia, gana la urgencia.
 
-## 8.6 Principio 3 — Participación del personal
+## Principio 3 — Participación del personal
 
 *"La calidad se construye entre todos."*
 
@@ -959,7 +966,7 @@ La frase que cierra el roadmap: **"Del valor esperado por el cliente a un sistem
 
 > **Respuesta modelo (por qué cumple el principio 3).** Porque la empresa brinda **voz** (cualquiera puede proponer), **autonomía** (cada persona elige su idea), **tiempo** (24 horas dedicadas) y **colaboración** (equipos multidisciplinarios) para que las ideas del personal **se transformen en mejoras**: es poder *aportar, decidir y transformar*, no solo asistir.
 
-## 8.7 Principio 4 — Enfoque basado en procesos
+## Principio 4 — Enfoque basado en procesos
 
 *"La calidad no vive en una tarea: fluye a través de todo el proceso."*
 
@@ -990,7 +997,7 @@ Con **mejora** como retroalimentación (*qué se aprende y qué se ajusta*) y cu
 
 *Tip ingenieril:* si no podés señalar con claridad dónde comienza y dónde termina, todavía no delimitaste el proceso. Y: **antes de automatizar, entendé, modelá y mejorá el proceso.**
 
-## 8.8 Principio 5 — Enfoque de sistema / Implementación de un SGC
+## Principio 5 — Enfoque de sistema / Implementación de un SGC
 
 *"La calidad deja de depender de esfuerzos aislados y se convierte en una forma organizada de gestionar."*
 
@@ -1012,7 +1019,7 @@ Con **mejora** como retroalimentación (*qué se aprende y qué se ajusta*) y cu
 
 > **Importante (nota de la slide, y trampa de examen).** **Implementar un SGC no significa necesariamente certificar una norma. La certificación puede ser una decisión posterior.** Un SGC convierte la calidad en **una capacidad de la organización**, no en el esfuerzo individual de algunas personas. (Conecta con el caso de la "empresa certificada" del capítulo 6.)
 
-## 8.9 Principio 6 — Mejora continua
+## Principio 6 — Mejora continua
 
 *"Mejorar no es llegar a una meta: es aprender a avanzar siempre."*
 
@@ -1064,7 +1071,7 @@ La **regla de despliegue** bloquea el despliegue si falla alguna prueba del fluj
 
 > **Idea clave.** Lo que aporta Six Sigma: **no se corrigió solamente el último bug**; se identificó y mejoró el **patrón del proceso** que generaba las fallas. Se pasa de una percepción general a una causa comprobada, una solución verificable y un resultado sostenido.
 
-## 8.10 Principio 7 — Toma de decisiones basada en evidencia
+## Principio 7 — Toma de decisiones basada en evidencia
 
 *"Los datos no reemplazan el criterio: lo hacen más sólido."*
 
@@ -1119,7 +1126,7 @@ Es una **herramienta visual que organiza las causas posibles de un problema para
 
 > **Ojo (el mismo escenario, dos lentes).** Este ejemplo y el de DMAIC (principio 6) cuentan **el mismo problema hipotético del checkout**. En el principio 6 se mira el **método de mejora** (DMAIC); en el 7, **cómo se valida la causa** (Ishikawa + evidencia). Además, dos cifras del 70 % no son lo mismo: en DMAIC, "el 70 % de las fallas aparece cuando los cambios en pagos llegan tarde a las pruebas integrales"; en Ishikawa, "el 70 % de los incidentes ocurre en pagos" (*logs*). Son hallazgos distintos, y sostienen juntos la misma causa raíz.
 
-## 8.11 Principio 8 — Relación con los proveedores
+## Principio 8 — Relación con los proveedores
 
 *"La calidad del software también se construye fuera de la organización."* — *Un producto es tan confiable como el ecosistema que lo sostiene.*
 
@@ -1137,7 +1144,7 @@ Es una **herramienta visual que organiza las causas posibles de un problema para
 
 > **Ojo (dos versiones de los cinco pasos).** La slide general lista *Seleccionar, Acordar, Integrar, Medir, Mejorar juntos*, y la del ejemplo *Acordar, Integrar, **Probar**, Medir, Mejorar juntos* (reemplaza "Seleccionar" por "Probar", porque ya hay un proveedor elegido). Si te piden "los pasos", podés mencionar ambas variantes.
 
-## 8.12 Cómo se conectan los ocho principios
+## Cómo se conectan los ocho principios
 
 No son una lista de compras: se **refuerzan entre sí**. Una forma de verlos (análisis mío):
 
@@ -1156,7 +1163,7 @@ Ejemplos de interdependencia:
 - Sin **procesos** (4) claros, el **SGC** (5) es solo papel.
 - Sin **cliente** (1) como referencia, optimizar procesos (4) puede ser optimizar lo irrelevante.
 
-## 8.13 Cómo detectar qué principio se incumple en un caso
+## Cómo detectar qué principio se incumple en un caso
 
 Método práctico (aporte mío; coincide con la lógica de la Guía del TP, donde se pide estado, evidencia, confianza e impacto por principio):
 
@@ -1176,7 +1183,7 @@ Método práctico (aporte mío; coincide con la lógica de la Guía del TP, dond
 | Decisiones por intuición, jerarquía o urgencia; datos sin validar; "culpables" en vez de causas | **7. Evidencia** |
 | Proveedor evaluado solo por precio; sin protocolo de cambios; culpas cruzadas | **8. Proveedores** |
 
-## 8.14 Para recordar
+## Para recordar
 
 - **Calidad Total** = excelencia que satisface al cliente **interno y externo**, al **menor costo**, en armonía con el **entorno social**, en un **proceso continuo**; objetivo final: **supervivencia y sostenibilidad.**
 - **Ocho principios:** 1 Orientación al cliente, 2 Liderazgo, 3 Participación del personal, 4 Enfoque basado en procesos, 5 Enfoque de sistema / SGC, 6 Mejora continua, 7 Decisiones basadas en evidencia, 8 Relación con proveedores.
@@ -1184,11 +1191,11 @@ Método práctico (aporte mío; coincide con la lógica de la Guía del TP, dond
 
 \newpage
 
-# 9. Integración: cómo se conectan los temas
+# Integración: cómo se conectan los temas
 
 Hasta acá estudiaste cada tema por separado. En un parcial teórico-práctico, lo difícil suele ser **reconocer qué tema está en juego** y **combinar varios en una misma respuesta**. Este capítulo sirve para eso.
 
-## 9.1 Mapa conceptual de la unidad
+## Mapa conceptual de la unidad
 
 ```
                     CALIDAD  (ISO 9000:2015)
@@ -1223,7 +1230,7 @@ Hasta acá estudiaste cada tema por separado. En un parcial teórico-práctico, 
 
 **Cómo leerlo.** La calidad se define respecto de requisitos (cap. 1) y se mira desde varias perspectivas (cap. 2). Dos de ellas, producto y proceso (cap. 3), se influyen pero no se garantizan mutuamente (cap. 6). Mirar por dentro el producto muestra la calidad interna y la deuda técnica (cap. 4 y 5). Todo termina en plata (cap. 7), y la Calidad Total es la forma de gestionar la organización completa para que eso no dependa de esfuerzos aislados (cap. 8).
 
-## 9.2 Tabla de reflejos: "si te dicen X, pensá en Y"
+## Tabla de reflejos: "si te dicen X, pensá en Y"
 
 Una buena forma de resolver rápido una pregunta es reconocer **palabras ancla**. (Tabla armada por mí a partir de las slides.)
 
@@ -1256,7 +1263,7 @@ Una buena forma de resolver rápido una pregunta es reconocer **palabras ancla**
 | "mejorar el flujo completo" / "SGC $\neq$ certificar" / "hacer del aprendizaje una práctica de gestión" | Principios 4 / 5 / 6 | 8 |
 | "evidencia + criterio experto" / "la falla del proveedor es experiencia del cliente" | Principios 7 / 8 | 8 |
 
-## 9.3 Un mismo caso, ocho lecturas
+## Un mismo caso, ocho lecturas
 
 Para ver cómo los capítulos se apoyan entre sí, tomemos **un solo caso inventado por mí** y miremos qué dice cada tema.
 
@@ -1273,7 +1280,7 @@ Para ver cómo los capítulos se apoyan entre sí, tomemos **un solo caso invent
 | 7 | Capacitación (prevención), pruebas (evaluación), retrabajo (falla interna), soporte y pacientes que se van (falla externa). |
 | 8 | Principio 1: ¿el paciente *logra* sacar su turno? 2: la dirección da tiempo para refactorizar. 3: recepción aporta lo que ve a diario. 4: se mejora el flujo completo de turnos, no solo la app. 6: retrospectivas con acciones. 7: se decide con *logs* y reclamos. 8: acuerdo de servicio (SLA) con quien envía los SMS. |
 
-## 9.4 Relaciones entre temas que conviene tener claras
+## Relaciones entre temas que conviene tener claras
 
 *(Síntesis mía; cada relación está apoyada en lo que dicen las slides.)*
 
@@ -1283,7 +1290,7 @@ Para ver cómo los capítulos se apoyan entre sí, tomemos **un solo caso invent
 - **Semáforo verde y evidencia.** El semáforo verde ocurre cuando solo se mide el proceso. La cura son los principios 1 y 7: observar si el usuario logra su objetivo y decidir con evidencia que incluya el producto (cap. 6 y 8).
 - **QA/QC y prevención/evaluación.** QA se parece a lo que financia la **prevención**; QC, a lo que financia la **evaluación**. No son idénticos (los costos se clasifican por su naturaleza económica, QA y QC por su foco), pero conviene verlos juntos (aporte mío).
 
-## 9.5 Tres lentes sobre una misma actividad
+## Tres lentes sobre una misma actividad
 
 Una misma actividad se puede mirar desde tres lentes: **QA o QC**, **categoría de costo** y **principio de Calidad Total**. Clasificación mía, para practicar; algunas actividades tienen zonas grises y lo importante es **justificar**.
 
@@ -1300,16 +1307,16 @@ Una misma actividad se puede mirar desde tres lentes: **QA o QC**, **categoría 
 
 \newpage
 
-# 10. Autoevaluación
+# Autoevaluación
 
-## 10.1 Cómo usarla
+## Cómo usarla
 
 1. Respondé **sin mirar** el apunte ni el Anexo A; lo que no puedas responder es tu mapa de estudio.
 2. Corregí con el **Anexo A** (importa más *por qué* que *cuál*) y volvé a los capítulos de lo que fallaste.
 
 > **Ojo.** Las preguntas, ejercicios y casos de este capítulo son **míos** y **no son del examen** (salvo el ejercicio 6, que reproduce la función del parcial 2025). Las preguntas reales de 2025 están en el Anexo D.
 
-## 10.2 Preguntas de desarrollo
+## Preguntas de desarrollo
 
 **D1.** Definí calidad según ISO 9000:2015, explicando cada término clave. ¿Por qué se dice que la calidad es relativa? ¿Significa que es arbitraria?
 
@@ -1349,7 +1356,7 @@ Una misma actividad se puede mirar desde tres lentes: **QA o QC**, **categoría 
 
 **D19.** Integradora. Relacioná **deuda técnica**, **costos de la no calidad** y **Calidad Total**: ¿cómo se conectan los tres conceptos?
 
-## 10.3 Opción múltiple
+## Opción múltiple
 
 Marcá **la** respuesta correcta (en el parcial real puede haber más de una; acá hay una sola por pregunta).
 
@@ -1528,7 +1535,7 @@ b) Mejora continua.
 c) Liderazgo.
 d) Relación con los proveedores.
 
-## 10.4 Verdadero o falso (justificá)
+## Verdadero o falso (justificá)
 
 Decí si es verdadero o falso y **explicá por qué en una línea**. Una afirmación falsa casi nunca lo es "por completo": identificá la parte que falla.
 
@@ -1574,7 +1581,7 @@ Decí si es verdadero o falso y **explicá por qué en una línea**. Una afirmac
 
 **VF21.** La deuda técnica que no se registra compite de manera invisible con cada funcionalidad nueva.
 
-## 10.5 Ejercicios numéricos de costos
+## Ejercicios numéricos de costos
 
 **Ejercicio 1.** Un proyecto tiene un presupuesto total de **US\$ 250.000**. Costos asociados a la calidad:
 
@@ -1612,7 +1619,7 @@ e) ¿Qué le recomendarías al equipo y por qué?
 11. Definir guías de codificación y diseñar la arquitectura antes de implementar.
 12. Pérdida de clientes por mala reputación del producto.
 
-## 10.6 Ejercicios de complejidad ciclomática
+## Ejercicios de complejidad ciclomática
 
 **Ejercicio 5.** Dada la función:
 
@@ -1660,7 +1667,7 @@ b) Armá la tabla de casos de prueba para los caminos básicos (con el `and` con
 
 > **Para el examen.** Ese ejercicio apareció en el parcial 2025 pidiendo "casos de prueba que cubran los caminos básicos y expongan la tabla de casos". Aclará siempre qué convención usás para el `and`.
 
-## 10.7 Casos para analizar
+## Casos para analizar
 
 **Caso A: "Funciona, no lo toquemos".** Un banco calcula los intereses de los préstamos con una regla que está **copiada en 9 servicios distintos**, cada uno con pequeñas diferencias. No hay pruebas automáticas. El área comercial pide cambiar una tasa; el equipo estimó **1 día** y terminó llevando **3 semanas**, con dos errores en producción. El gerente dice: *"El sistema funciona desde hace años, no hay que tocar nada."*
 
@@ -1684,9 +1691,9 @@ c) ¿Qué modelo de mejora continua aplicarías y cómo?
 
 \newpage
 
-# 11. Errores y trampas frecuentes
+# Errores y trampas frecuentes
 
-## 11.1 Confusiones clásicas
+## Confusiones clásicas
 
 | # | Error frecuente | Por qué está mal | Cómo evitarlo |
 |:-:|:--------------------------|:-----------------------------|:--------------------------|
@@ -1714,13 +1721,13 @@ c) ¿Qué modelo de mejora continua aplicarías y cómo?
 | 22 | Ishikawa para "buscar culpables" | Organiza hipótesis; la evidencia las confirma o descarta | Frase: ayuda a comprender el sistema que produce el problema |
 | 23 | Ponerle otro nombre al principio 5 | Figura como "Enfoque de sistema" y como "Implementación de un SGC" | Escribir "Enfoque de sistema / Implementación de un SGC" |
 
-## 11.2 Trampas de redacción en preguntas de opción múltiple
+## Trampas de redacción en preguntas de opción múltiple
 
 - **"Marcar la/s respuesta/s correcta/s"** significa que **puede haber más de una** (en el parcial 2025, la pregunta 4 de costos tenía las tres correctas).
 - Desconfiá de las palabras absolutas (**"únicamente", "siempre", "garantiza", "solo", "nunca"**): casi nada es absoluto en esta unidad. Si dos opciones parecen correctas, elegí la que **usa la formulación de la cátedra**.
 - Los distractores suelen ser **la respuesta de otro tema**: preguntate de qué tema es cada uno.
 
-## 11.3 Cómo responder un caso en el parcial
+## Cómo responder un caso en el parcial
 
 1. **Identificá el concepto** que el caso ilustra (¿semáforo verde? ¿deuda técnica? ¿principio 4?).
 2. **Citá evidencia del enunciado**, con sus palabras: sin evidencia, la respuesta vale menos.
