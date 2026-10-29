@@ -7,8 +7,9 @@
 %   emojis, listas, tablas, cuadros y bloques de código.
 %
 % CÓMO SE USA
-%   No se llama a mano: lo carga estilo.yaml con "include-in-header". Se usa
-%   con:  pandoc -d estilo nota.md -o nota.pdf
+%   No se llama a mano: lo agrega al preámbulo el filtro
+%   filters/preambulo.lua, que carga estilo.yaml. Se usa con:
+%       pandoc -d estilo nota.md -o nota.pdf
 %
 % CÓMO SE EDITA
 %   Cada sección (0 a 6) es independiente. Para sacar algo del estilo, borrá
@@ -26,7 +27,7 @@
 %   - fonts-noto-color-emoji: los emojis a color (sección 0).
 %
 % SECCIONES
-%   0) Fuente principal y emojis
+%   0) Fuente principal y emojis (se cambia con "mainfont" en la nota)
 %   1) Listas con más aire
 %   2) Tablas con más aire
 %   3) Cuadros para las citas (> en Markdown)
@@ -39,22 +40,35 @@
 % ------------------------------------------------------------------------------
 % 0) Fuente principal con respaldo: emojis a color y símbolos
 %
-%    Latin Modern Roman (la letra clásica de LaTeX) no tiene emojis ni muchos
-%    símbolos. Con lualatex se le puede decir qué fuente usar "de respaldo"
-%    cuando falta un carácter:
+%    Ninguna letra de texto trae emojis, y muchas no traen símbolos. Con
+%    lualatex se le puede decir qué fuente usar "de respaldo" cuando falta un
+%    carácter:
 %      1.º Noto Color Emoji  (emojis a color; "mode=harf" es lo que permite
 %                             dibujarlos en color)
 %      2.º DejaVu Sans       (símbolos como ✓ o →; suele venir instalada)
-%    Con otro motor (pdflatex, xelatex) este bloque no se aplica: "\ifLuaTeX"
-%    lo protege para que no dé error.
-%    Esta línea pisa el "mainfont" que una nota pudiera definir.
+%
+%    La letra principal es Latin Modern Roman (la clásica de LaTeX), salvo
+%    que la nota ponga otra con "mainfont: ..." en su cabecera. En ese caso,
+%    el filtro filters/preambulo.lua define \fuenteprincipal con ese
+%    nombre, y acá se carga esa letra, también con el respaldo de emojis.
+%    (Sin el filtro, pandoc cargaría la letra por su cuenta y sin emojis.)
+%
+%    Con xelatex no hay respaldo (es una función de lualatex): se usa la letra
+%    pedida, sin emojis. Con pdflatex no se toca nada.
 % ------------------------------------------------------------------------------
+\ifdefined\fuenteprincipal\else
+  \def\fuenteprincipal{Latin Modern Roman}
+\fi
 \ifLuaTeX
   \directlua{
     luaotfload.add_fallback("emojis",
       {"Noto Color Emoji:mode=harf;", "DejaVu Sans:"})
   }
-  \setmainfont{Latin Modern Roman}[RawFeature={fallback=emojis}]
+  \setmainfont{\fuenteprincipal}[RawFeature={fallback=emojis}]
+\else
+  \ifdefined\setmainfont
+    \setmainfont{\fuenteprincipal}
+  \fi
 \fi
 
 

@@ -9,7 +9,7 @@ pandoc -d estilo nota.md -o nota.pdf
 ## Qué consigue
 
 - **Una sola configuración para todas las notas.** Cada `.md` lleva únicamente su cabecera (`title`, `subtitle`, `author`, `date`). El aspecto vive acá.
-- **Emojis a color** y símbolos (✅ ⚠️ α →) con la letra Latin Modern Roman.
+- **Emojis a color** y símbolos (✅ ⚠️ α →), con la letra Latin Modern Roman o con la que pida cada nota.
 - **Cuadros** celestes con barra azul para las citas (`>`): ideales para "Idea clave", "Ojo", "Para el examen".
 - **Listas y tablas con más aire** que el pandoc por defecto.
 - **Código que no se sale de la hoja:** las líneas largas se cortan y la continuación empieza con una flechita (↪).
@@ -25,15 +25,16 @@ pandoc/                      (esta carpeta es ~/.local/share/pandoc)
 │   ├── metadatos.yaml       valores por defecto: idioma, márgenes, tamaño de letra
 │   └── estilo.tex           aspecto en LaTeX: fuentes, emojis, listas, tablas, cuadros, código
 ├── filters/
+│   ├── preambulo.lua        filtro de pandoc: carga estilo.tex, respeta el header-includes y la letra de la nota
 │   └── cortar-formulas.lua  filtro de pandoc: parte en filas las fórmulas que no entran en la hoja
 ├── examples/
 │   ├── example_1.md / .pdf  ejemplo básico: todo lo que cubre el estilo
 │   ├── example_2.md / .pdf  tablas y casos que pueden salirse de la hoja
-│   └── example_3.md / .pdf  apunte real y largo (85 páginas): índice, fórmulas, saltos de página
+│   └── example_3.md / .pdf  apunte real y largo (más de 90 páginas): índice, fórmulas, saltos de página
 └── README.md
 ```
 
-La carpeta `defaults/` tiene que llamarse así: es el nombre que pandoc busca. Los tres archivos de adentro tienen que estar juntos, porque `estilo.yaml` encuentra a los otros dos por su ubicación. `filters/` tiene que estar al lado de `defaults/`: `estilo.yaml` busca el filtro en `../filters/`.
+La carpeta `defaults/` tiene que llamarse así: es el nombre que pandoc busca. Los tres archivos de adentro tienen que estar juntos, porque `estilo.yaml` encuentra a los otros dos por su ubicación. `filters/` tiene que estar al lado de `defaults/`: `estilo.yaml` busca los filtros en `../filters/`, y `preambulo.lua` busca `estilo.tex` en `../defaults/`.
 
 ## Instalación
 
@@ -110,8 +111,12 @@ geometry: margin=4cm      # márgenes distintos solo para esta nota
 fontsize: 12pt
 toc: true                 # índice al principio
 numbersections: true      # títulos numerados
+mainfont: Libertinus Serif   # otra letra (los emojis se mantienen)
+header-includes: \usepackage{float}   # LaTeX extra para el preámbulo
 ---
 ```
+
+Sobre la letra: sin `mainfont` se usa Latin Modern Roman. El nombre tiene que ser exactamente el que muestra `fc-list | grep -i "nombre"`, y la letra tiene que estar instalada. Si la letra trae sus propios dibujos de algunos emojis o símbolos (DejaVu Sans, por ejemplo), usa esos, en blanco y negro; los que no tenga salen a color.
 
 O desde la terminal:
 
@@ -162,11 +167,13 @@ pandoc -d estilo nota.md -s -t latex -o nota.tex
 
 | Archivo | Qué contiene | Por qué va aparte |
 |:--|:--|:--|
-| `estilo.yaml` | Opciones de pandoc: motor, estilo del código, y qué otros dos archivos cargar. | Es el que se nombra al compilar. |
+| `estilo.yaml` | Opciones de pandoc: motor, estilo del código, `metadatos.yaml` y los filtros. | Es el que se nombra al compilar. |
 | `metadatos.yaml` | Valores por defecto: idioma, márgenes, tamaño de letra, enlaces. | Una nota puede pisarlos desde su cabecera. Si estuvieran en `estilo.yaml`, ganarían ellos y la nota no podría cambiarlos. |
 | `estilo.tex` | Código LaTeX: fuentes, emojis, cuadros, listas, tablas, código. | Es otro lenguaje; mezclarlo en un YAML lo haría ilegible. |
 
-`estilo.yaml` los conecta con `${.}`, que significa "la carpeta donde está este archivo". Por eso se pueden mover los tres juntos a cualquier lugar.
+`estilo.yaml` los conecta con `${.}`, que significa "la carpeta donde está este archivo". Por eso se puede mover la carpeta entera a cualquier lugar.
+
+`estilo.tex` no lo carga `estilo.yaml` directamente (con `include-in-header`) sino el filtro `filters/preambulo.lua`. Con `include-in-header`, pandoc ignoraba sin avisar el `header-includes` de la cabecera de la nota. El filtro pone primero `estilo.tex` y después lo de la nota, así la nota puede cambiar algo del estilo. También es el que pasa el `mainfont` de la nota a `estilo.tex`, para que la letra nueva conserve los emojis.
 
 ### Orden de prioridad de los valores
 
@@ -180,7 +187,7 @@ metadatos.yaml  <  cabecera de la nota  <  opción -M del comando
 
 | Sección | Qué hace |
 |:--|:--|
-| 0 | Letra Latin Modern Roman con respaldo: Noto Color Emoji (emojis) y DejaVu Sans (símbolos). |
+| 0 | Letra principal (Latin Modern Roman, o la del `mainfont` de la nota) con respaldo: Noto Color Emoji (emojis) y DejaVu Sans (símbolos). |
 | 1 | Más separación entre los ítems de las listas. |
 | 2 | Más altura en las filas de las tablas. |
 | 3 | Las citas pasan a ser cuadros celestes con barra azul. |
@@ -209,7 +216,7 @@ Es una estimación (error de ±2 % en fórmulas anchas), y se calibró con fórm
 
 | Quiero... | Dónde |
 |:--|:--|
-| Cambiar los márgenes, la letra o el idioma de todas las notas | `defaults/metadatos.yaml` |
+| Cambiar los márgenes, el tamaño de letra, el interlineado o el idioma de todas las notas | `defaults/metadatos.yaml` |
 | Cambiar los colores del código | `highlight-style` en `defaults/estilo.yaml` (`pandoc --list-highlight-styles` muestra las opciones) |
 | Cambiar los colores de los cuadros | los dos `\definecolor` de la sección 3 de `defaults/estilo.tex` |
 | Más o menos aire en listas o tablas | secciones 1 y 2 de `defaults/estilo.tex` |
@@ -232,7 +239,7 @@ En `examples/` hay tres notas con su PDF ya generado, para ver el resultado sin 
 |:--|:--|
 | `example_1` | Lo básico: cabecera, texto, emojis, listas, cuadros, tablas y código. Sirve como plantilla para empezar. |
 | `example_2` | Tablas con texto largo, muchas columnas, URLs y hashes sin espacios, y código en línea. Son los casos donde un PDF suele salirse de la hoja. |
-| `example_3` | Un apunte real y largo (85 páginas), con índice, fórmulas, saltos de página y márgenes propios en la cabecera. Tarda más en compilar (unos 15 segundos, contra 4 de los otros). |
+| `example_3` | Un apunte real y largo (más de 90 páginas), con índice, fórmulas, saltos de página y márgenes propios en la cabecera. Tarda más en compilar (unos 15 segundos, contra 4 de los otros). |
 
 ## Problemas frecuentes
 
@@ -241,7 +248,9 @@ En `examples/` hay tres notas con su PDF ya generado, para ver el resultado sin 
 | `estilo.yaml: ... does not exist` | Pandoc no encuentra el archivo. Revisá que los archivos estén en `~/.local/share/pandoc/defaults/` y que la carpeta de datos sea esa (`pandoc --version \| grep -i "user data"`). Si existe `~/.pandoc`, usa esa. |
 | `File 'fvextra.sty' not found` | Falta un paquete: `sudo apt install texlive-latex-extra`. |
 | `lualatex not found. Please select a different --pdf-engine...` | Falta el motor: `sudo apt install texlive-luatex`. |
-| Los emojis salen en blanco, en negro o no salen | Falta la fuente: `sudo apt install fonts-noto-color-emoji`. |
+| Los emojis salen en blanco, en negro o no salen | Falta la fuente: `sudo apt install fonts-noto-color-emoji`. Si la nota tiene `mainfont`, puede ser que esa letra traiga sus propios emojis en blanco y negro. |
+| `The font "X" cannot be found` | La letra del `mainfont` no está instalada o el nombre no coincide: comparalo con `fc-list \| grep -i "X"`. |
+| `[preambulo] no encontré .../estilo.tex` | `defaults/` y `filters/` tienen que estar uno al lado del otro. |
 | No se genera ningún PDF, error con `lmodern` | `sudo apt install lmodern texlive-fonts-recommended`. |
 | Una fórmula se sale de la hoja | Mirá si el filtro avisó por pantalla. Si tiene un solo término larguísimo o no tiene `+` ni `-` con espacios alrededor, no hay dónde cortar: hay que partirla a mano con `\begin{aligned} ... \\ ... \end{aligned}`. |
 | `Could not find filter` o error del filtro | `filters/` tiene que estar al lado de `defaults/`. Para probar sin el filtro, comentar `filters:` en `estilo.yaml`. |

@@ -6,7 +6,8 @@
 #   YAML en vez de en la línea de comandos. Este junta las opciones comunes a
 #   todos mis apuntes y apunta a los otros dos archivos de esta carpeta:
 #     - metadatos.yaml  valores por defecto (idioma, márgenes, tamaño de letra)
-#     - estilo.tex      aspecto (fuentes, emojis, listas, tablas, cuadros, código)
+#     - estilo.tex      aspecto (fuentes, emojis, listas, tablas, cuadros, código);
+#                       lo carga el filtro ../filters/preambulo.lua
 #
 # CÓMO SE USA
 #   pandoc -d estilo nota.md -o nota.pdf
@@ -64,12 +65,15 @@ highlight-style: tango
 metadata-files:
   - ${.}/metadatos.yaml
 
-# Código LaTeX que se agrega al preámbulo de cada documento: define el aspecto.
-include-in-header:
-  - ${.}/estilo.tex
-
-# Filtro de pandoc (en ../filters/) que parte en filas las fórmulas en bloque
-# ($$ ... $$) que no entran en el ancho de la hoja. Las que entran no se tocan.
-# Cómo funciona y cómo ajustarlo: encabezado de filters/cortar-formulas.lua.
+# Filtros de pandoc (en ../filters/). Cada uno explica en su encabezado qué hace.
+#   preambulo.lua        agrega estilo.tex al preámbulo de cada documento, junto
+#                        con el header-includes de la nota (si lo tiene), y
+#                        permite cambiar la letra con "mainfont" en la nota sin
+#                        perder los emojis.
+#                        (estilo.tex no se carga con "include-in-header" porque
+#                        así pandoc ignoraba el header-includes de la nota.)
+#   cortar-formulas.lua  parte en filas las fórmulas en bloque ($$ ... $$)
+#                        que no entran en el ancho de la hoja.
 filters:
+  - ${.}/../filters/preambulo.lua
   - ${.}/../filters/cortar-formulas.lua
