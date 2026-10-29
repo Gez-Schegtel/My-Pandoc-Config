@@ -6,18 +6,12 @@ date: "Octubre de 2026"
 toc: true
 toc-depth: 4
 numbersections: true
-geometry: margin=2.6cm
+geometry: margin=2.4cm
 mainfont: Libertinus Serif
-sansfont: Inter
-monofont: JetBrains Mono
 linestretch: 1.15
-documentclass: scrartcl
-classoption: numbers=enddot
 ---
 
 \newpage
-
-![](./logo_utn.png)
 
 # 0. Cómo usar este apunte
 

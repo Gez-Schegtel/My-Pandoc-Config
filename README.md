@@ -14,6 +14,7 @@ pandoc -d estilo nota.md -o nota.pdf
 - **Listas y tablas con más aire** que el pandoc por defecto.
 - **Código que no se sale de la hoja:** las líneas largas se cortan y la continuación empieza con una flechita (↪).
 - **URLs, hashes y rutas largas** en tablas o párrafos también se cortan en vez de salirse de la hoja.
+- **Fórmulas largas que no se salen de la hoja:** las que no entran se parten solas en filas.
 - **Una nota puede cambiar cualquier valor** (márgenes, tamaño de letra...) desde su propia cabecera, sin tocar la configuración.
 
 ## Contenido del repositorio
@@ -59,7 +60,7 @@ sudo apt install pandoc texlive-luatex texlive-latex-recommended \
 Pandoc busca sus archivos de configuración en su "carpeta de datos". En Linux es `~/.local/share/pandoc`. Este repositorio **es** esa carpeta:
 
 ```bash
-git clone <URL-del-repositorio> ~/.local/share/pandoc
+git clone https://github.com/Gez-Schegtel/My-Pandoc-Config.git ~/.local/share/pandoc
 ```
 
 Para comprobar que pandoc usa esa carpeta:
@@ -116,13 +117,13 @@ header-includes: \usepackage{float}   # LaTeX extra para el preámbulo
 ---
 ```
 
-Sobre la letra: sin `mainfont` se usa Latin Modern Roman. El nombre tiene que ser exactamente el que muestra `fc-list | grep -i "nombre"`, y la letra tiene que estar instalada. Si la letra trae sus propios dibujos de algunos emojis o símbolos (DejaVu Sans, por ejemplo), usa esos, en blanco y negro; los que no tenga salen a color.
-
 O desde la terminal:
 
 ```bash
 pandoc -d estilo -M date="$(date +%d/%m/%Y)" nota.md -o nota.pdf
 ```
+
+Sobre la letra: sin `mainfont` se usa Latin Modern Roman. El nombre tiene que ser exactamente el que muestra `fc-list | grep -i "nombre"`, y la letra tiene que estar instalada. Si la letra trae sus propios dibujos de algunos emojis o símbolos (DejaVu Sans, por ejemplo), usa esos, en blanco y negro; los que no tenga salen a color.
 
 ### Escribir los cuadros
 
@@ -208,7 +209,7 @@ Pandoc no corta una fórmula en bloque (`$$ ... $$`) que es más ancha que la ho
 - Lee el tamaño de letra y los márgenes de la cabecera de la nota (`fontsize`, `geometry: margin=...`, `papersize`), así que se adapta si los cambiás.
 - Si una fórmula sigue sin entrar (por ejemplo, un solo término larguísimo), avisa por pantalla.
 
-Para ver qué fórmulas corta y con qué ancho: `CORTAR_FORMULAS_DEBUG=1 pandoc -d estilo nota.md -o nota.pdf`. Para apagarlo, borrar o comentar el bloque `filters:` de `estilo.yaml`. Los umbrales están al principio del filtro.
+Para ver qué fórmulas corta y con qué ancho: `CORTAR_FORMULAS_DEBUG=1 pandoc -d estilo nota.md -o nota.pdf`. Para apagarlo, comentar (con `#`) solo la línea de `cortar-formulas.lua` en el bloque `filters:` de `estilo.yaml`; la de `preambulo.lua` tiene que quedar, porque sin ella no se carga el estilo. Los umbrales están al principio del filtro.
 
 Es una estimación (error de ±2 % en fórmulas anchas), y se calibró con fórmulas de funciones de transferencia: con símbolos poco comunes puede cortar de más o de menos.
 
@@ -221,7 +222,7 @@ Es una estimación (error de ±2 % en fórmulas anchas), y se calibró con fórm
 | Cambiar los colores de los cuadros | los dos `\definecolor` de la sección 3 de `defaults/estilo.tex` |
 | Más o menos aire en listas o tablas | secciones 1 y 2 de `defaults/estilo.tex` |
 | Sacar algo del estilo | borrar o comentar su sección en `defaults/estilo.tex` |
-| Que no se corten las fórmulas largas | comentar el bloque `filters:` de `defaults/estilo.yaml` |
+| Que no se corten las fórmulas largas | comentar la línea de `cortar-formulas.lua` en `defaults/estilo.yaml` (no la de `preambulo.lua`) |
 | Tener un segundo estilo (por ejemplo, uno compacto) | crear otro `.yaml` en `defaults/` y usarlo así: `pandoc -d estilo -d compacto nota.md -o nota.pdf` |
 
 Después de cambiar el estilo, conviene volver a generar los PDF de los ejemplos:
@@ -239,7 +240,7 @@ En `examples/` hay tres notas con su PDF ya generado, para ver el resultado sin 
 |:--|:--|
 | `example_1` | Lo básico: cabecera, texto, emojis, listas, cuadros, tablas y código. Sirve como plantilla para empezar. |
 | `example_2` | Tablas con texto largo, muchas columnas, URLs y hashes sin espacios, y código en línea. Son los casos donde un PDF suele salirse de la hoja. |
-| `example_3` | Un apunte real y largo (más de 90 páginas), con índice, fórmulas, saltos de página y márgenes propios en la cabecera. Tarda más en compilar (unos 15 segundos, contra 4 de los otros). |
+| `example_3` | Un apunte real y largo (más de 90 páginas), con índice, fórmulas, saltos de página, y márgenes, interlineado y letra propios en la cabecera (`mainfont: Libertinus Serif`: para compilarlo hay que tener esa letra instalada). Tarda más en compilar (unos 15 segundos, contra 4 de los otros). |
 
 ## Problemas frecuentes
 
@@ -253,5 +254,5 @@ En `examples/` hay tres notas con su PDF ya generado, para ver el resultado sin 
 | `[preambulo] no encontré .../estilo.tex` | `defaults/` y `filters/` tienen que estar uno al lado del otro. |
 | No se genera ningún PDF, error con `lmodern` | `sudo apt install lmodern texlive-fonts-recommended`. |
 | Una fórmula se sale de la hoja | Mirá si el filtro avisó por pantalla. Si tiene un solo término larguísimo o no tiene `+` ni `-` con espacios alrededor, no hay dónde cortar: hay que partirla a mano con `\begin{aligned} ... \\ ... \end{aligned}`. |
-| `Could not find filter` o error del filtro | `filters/` tiene que estar al lado de `defaults/`. Para probar sin el filtro, comentar `filters:` en `estilo.yaml`. |
+| `Could not find filter` o error de un filtro | `filters/` tiene que estar al lado de `defaults/`. Si el error es de `cortar-formulas.lua`, se puede probar comentando su línea en `estilo.yaml`. `preambulo.lua` no se puede sacar: es el que carga el estilo. |
 | Error de Lua o de `\directlua` | Mirá la sección 5 de `estilo.tex`. Si no lo necesitás, se puede borrar esa sección: el resto sigue funcionando. |
