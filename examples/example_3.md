@@ -4,8 +4,11 @@ subtitle: "Apunte de estudio para el primer parcial"
 author: "Aspectos Avanzados de Calidad de Software · ISI · UTN FRRe · 2026"
 date: "Octubre de 2026"
 toc: true
-toc-depth: 2
+toc-depth: 4
+numbersections: true
 geometry: margin=2.4cm
+mainfont: Libertinus Serif
+linestretch: 1.15
 ---
 
 \newpage
@@ -14,7 +17,7 @@ geometry: margin=2.4cm
 
 ## 0.1 Qué cubre
 
-Este apunte integra, explica y completa las cuatro presentaciones de la Unidad I:
+Este apunte integra, explica y completa las cuatro presentaciones de la Unidad I 🤟🏻:
 
 1. **Introducción a la Calidad de Software** (definiciones y las cinco perspectivas).
 2. **Aspectos de la Calidad de Software** (producto vs. proceso, calidad interna, complejidad ciclomática, deuda técnica, QA vs. QC).

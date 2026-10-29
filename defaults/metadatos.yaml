@@ -24,9 +24,14 @@ fontsize: 11pt
 # Enlaces con color (en vez de recuadros alrededor).
 colorlinks: true
 
+# Colores de los enlaces (NavyBlue = azul marino)
+linkcolor: NavyBlue
+urlcolor: NavyBlue
+toccolor: NavyBlue
+
 # Interlineado: 1 es el normal de LaTeX; 1.15 deja un poco más de aire entre
 # renglones (los PDF salen algo más largos).
-linestretch: 1.15
+linestretch: 1.10
 
 # --- Otras opciones que se suelen poner en la cabecera de UNA nota ------------
 # No van acá porque no se quieren en todos los documentos:
