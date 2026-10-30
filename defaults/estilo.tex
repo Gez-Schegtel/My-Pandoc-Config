@@ -259,8 +259,26 @@
 %    Una imagen con su propio tamaño en el Markdown, por ejemplo
 %        ![](foto.png){width=40%}
 %    usa ese tamaño, sin importar este tope.
+%
+%    Pandoc cambió la forma de achicar imágenes en la versión 3.2.1:
+%      - hasta la 3.2: usa \maxwidth (Debian 13 trae la 3.1.11);
+%      - desde la 3.2.1: usa \pandocbounded.
+%    Acá se redefinen los dos, copiando lo que hace pandoc pero con
+%    \anchoimagenes en lugar del ancho completo (\linewidth), así funciona con
+%    cualquier versión. Si pandoc vuelve a cambiar el nombre, este tope deja
+%    de aplicarse sin dar error: las imágenes vuelven al ancho completo.
 % ------------------------------------------------------------------------------
 \providecommand{\anchoimagenes}{\linewidth}
 \makeatletter
 \def\maxwidth{\ifdim\Gin@nat@width>\anchoimagenes\anchoimagenes\else\Gin@nat@width\fi}
+\ifdefined\pandocbounded
+  \renewcommand*\pandocbounded[1]{%
+    \sbox\pandoc@box{#1}%
+    \Gscale@div\@tempa{\textheight}{\dimexpr\ht\pandoc@box+\dp\pandoc@box\relax}%
+    \Gscale@div\@tempb{\anchoimagenes}{\wd\pandoc@box}%
+    \ifdim\@tempb\p@<\@tempa\p@\let\@tempa\@tempb\fi
+    \ifdim\@tempa\p@<\p@\scalebox{\@tempa}{\usebox\pandoc@box}%
+    \else\usebox{\pandoc@box}%
+    \fi}
+\fi
 \makeatother

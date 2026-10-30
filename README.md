@@ -69,7 +69,10 @@ Para comprobar que pandoc usa esa carpeta:
 pandoc --version | grep -i "user data"
 ```
 
-Tiene que mostrar `/home/<usuario>/.local/share/pandoc`. Si existe una carpeta `~/.pandoc`, pandoc usa esa en su lugar: hay que borrarla o renombrarla.
+Tiene que mostrar `/home/<usuario>/.local/share/pandoc`. Si muestra otra:
+
+- `~/.pandoc` (la carpeta vieja): pandoc la usa solo cuando `~/.local/share/pandoc` no existe, así que el repositorio no quedó en su lugar.
+- Otra ruta terminada en `/pandoc`: la variable `XDG_DATA_HOME` está definida y pandoc busca en `$XDG_DATA_HOME/pandoc`. Hay que poner el repositorio ahí o quitar esa variable.
 
 ### 3. Probar
 
@@ -259,7 +262,7 @@ En `examples/` hay tres notas con su PDF ya generado, para ver el resultado sin 
 
 | Síntoma | Causa y solución |
 |:--|:--|
-| `estilo.yaml: ... does not exist` | Pandoc no encuentra el archivo. Revisá que los archivos estén en `~/.local/share/pandoc/defaults/` y que la carpeta de datos sea esa (`pandoc --version \| grep -i "user data"`). Si existe `~/.pandoc`, usa esa. |
+| `estilo.yaml: ... does not exist` | Pandoc no encuentra el archivo. Revisá que los archivos estén en `~/.local/share/pandoc/defaults/` y que la carpeta de datos sea esa (`pandoc --version \| grep -i "user data"`). Si muestra otra, ver el paso 2 de la instalación. |
 | `File 'fvextra.sty' not found` | Falta un paquete: `sudo apt install texlive-latex-extra`. |
 | `lualatex not found. Please select a different --pdf-engine...` | Falta el motor: `sudo apt install texlive-luatex`. |
 | Los emojis salen en blanco, en negro o no salen | Falta la fuente: `sudo apt install fonts-noto-color-emoji`. Si la nota tiene `mainfont`, puede ser que esa letra traiga sus propios emojis en blanco y negro. |

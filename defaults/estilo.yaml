@@ -15,8 +15,9 @@
 #   "-d estilo" (solo el nombre) hace que pandoc busque
 #   <carpeta de datos de pandoc>/defaults/estilo.yaml. La carpeta de datos es
 #   normalmente ~/.local/share/pandoc (se comprueba con:
-#   pandoc --version | grep -i "user data"). Ojo: si existe una carpeta
-#   ~/.pandoc, pandoc usa esa en su lugar.
+#   pandoc --version | grep -i "user data"). La vieja ~/.pandoc solo se usa
+#   si ~/.local/share/pandoc no existe, y si está definida la variable
+#   XDG_DATA_HOME, la carpeta es $XDG_DATA_HOME/pandoc.
 #   También se puede pasar la ruta completa: pandoc -d /ruta/a/estilo.yaml ...
 #
 # QUÉ NECESITA CADA NOTA
