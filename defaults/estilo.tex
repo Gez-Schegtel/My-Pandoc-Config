@@ -35,6 +35,7 @@
 %   4) Código: cortar las líneas largas
 %   5) Palabras largas sin espacios (URLs, hashes)
 %   6) \needspace (evitar títulos solos al pie de la página)
+%   7) Ancho máximo de las imágenes (se cambia con "ancho-imagenes")
 % ==============================================================================
 
 
@@ -239,4 +240,27 @@
 \providecommand{\needspace}[1]{\begingroup\setlength{\dimen@}{#1}%
   \vskip\z@\@plus\dimen@\penalty-100\vskip\z@\@plus-\dimen@
   \vskip\dimen@\penalty9999\vskip-\dimen@\vskip\z@skip\endgroup}
+\makeatother
+
+
+% ------------------------------------------------------------------------------
+% 7) Ancho máximo de las imágenes
+%
+%    Pandoc ya achica las imágenes que no entran en el ancho del texto. Esto
+%    baja ese tope: ninguna imagen pasa de \anchoimagenes (por ejemplo, el
+%    80 % del ancho del texto). Las imágenes más chicas quedan como están, y
+%    se mantiene la proporción.
+%
+%    El valor se elige con "ancho-imagenes" en metadatos.yaml (para todas las
+%    notas) o en la cabecera de una nota (solo esa). El filtro
+%    filters/preambulo.lua lo convierte en \anchoimagenes. Sin ese valor, el
+%    tope es el ancho completo del texto, como hace pandoc.
+%
+%    Una imagen con su propio tamaño en el Markdown, por ejemplo
+%        ![](foto.png){width=40%}
+%    usa ese tamaño, sin importar este tope.
+% ------------------------------------------------------------------------------
+\providecommand{\anchoimagenes}{\linewidth}
+\makeatletter
+\def\maxwidth{\ifdim\Gin@nat@width>\anchoimagenes\anchoimagenes\else\Gin@nat@width\fi}
 \makeatother

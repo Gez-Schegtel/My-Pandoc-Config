@@ -6,6 +6,8 @@
 --   este orden:
 --     1. Si la nota pide otra letra con "mainfont: ...", la definición
 --        \fuenteprincipal con ese nombre (ver "LA LETRA" más abajo).
+--        Y si tiene "ancho-imagenes: ...", el ancho máximo de las imágenes
+--        (ver "LAS IMÁGENES").
 --     2. defaults/estilo.tex (el aspecto: emojis, cuadros, tablas, código...).
 --     3. El "header-includes" de la cabecera de la nota, si tiene.
 --
@@ -22,6 +24,13 @@
 --   desaparecerían. Por eso este filtro le saca el "mainfont" a pandoc y le
 --   pasa el nombre a estilo.tex, que carga esa letra con el respaldo.
 --   Sin "mainfont", la letra es Latin Modern Roman.
+--
+-- LAS IMÁGENES
+--   "ancho-imagenes" es el ancho máximo de las imágenes, como porcentaje del
+--   ancho del texto (70% o 0.7 significan lo mismo). Las imágenes más
+--   anchas se achican hasta ese ancho; las más chicas quedan como están. Se
+--   pasa a estilo.tex (sección 7) como \anchoimagenes. El valor por defecto
+--   está en metadatos.yaml, y cada nota puede poner el suyo.
 --
 -- CÓMO SE USA
 --   Lo carga defaults/estilo.yaml (opción "filters"). En la nota:
@@ -58,6 +67,19 @@ function Meta(meta)
       avisar('nombre de letra no válido, se usa la de siempre: ' .. nombre)
     else
       partes:insert(bloque('\\def\\fuenteprincipal{' .. nombre .. '}'))
+    end
+  end
+
+  -- 1b. El ancho máximo de las imágenes
+  if meta['ancho-imagenes'] ~= nil then
+    local texto = pandoc.utils.stringify(meta['ancho-imagenes'])
+    local numero = tonumber((texto:gsub('%s', ''):gsub('%%$', '')))
+    if numero and texto:find('%%') then numero = numero / 100 end
+    if numero and numero > 1 then numero = numero / 100 end   -- "70" = 70 %
+    if numero and numero > 0 and numero <= 1 then
+      partes:insert(bloque(string.format('\\def\\anchoimagenes{%.3f\\linewidth}', numero)))
+    else
+      avisar('ancho-imagenes no válido (se usa el ancho completo): ' .. texto)
     end
   end
 

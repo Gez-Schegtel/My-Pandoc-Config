@@ -30,6 +30,11 @@ linkcolor: NavyBlue
 urlcolor: NavyBlue
 toccolor: NavyBlue
 
+# Ancho máximo de las imágenes, como porcentaje del ancho del texto. Las más
+# anchas se achican; las más chicas quedan igual. Para una imagen puntual:
+#     ![](foto.png){width=40%}
+ancho-imagenes: 80%
+
 # Interlineado: 1 es el normal de LaTeX; con más de 1 queda más aire entre
 # renglones (los PDF salen algo más largos).
 linestretch: 1.10

@@ -113,6 +113,7 @@ fontsize: 12pt
 toc: true                 # índice al principio
 numbersections: true      # títulos numerados
 mainfont: Libertinus Serif   # otra letra (los emojis se mantienen)
+ancho-imagenes: 60%       # ninguna imagen más ancha que el 60 % del texto
 header-includes: \usepackage{float}   # LaTeX extra para el preámbulo
 ---
 ```
@@ -124,6 +125,17 @@ pandoc -d estilo -M date="$(date +%d/%m/%Y)" nota.md -o nota.pdf
 ```
 
 Sobre la letra: sin `mainfont` se usa Latin Modern Roman. El nombre tiene que ser exactamente el que muestra `fc-list | grep -i "nombre"`, y la letra tiene que estar instalada. Si la letra trae sus propios dibujos de algunos emojis o símbolos (DejaVu Sans, por ejemplo), usa esos, en blanco y negro; los que no tenga salen a color.
+
+### Tamaño de las imágenes
+
+Ninguna imagen pasa de `ancho-imagenes` (por defecto, el 80 % del ancho del texto, en `metadatos.yaml`). Las más anchas se achican; las más chicas quedan como están. Una nota puede poner su propio valor en la cabecera.
+
+Para una imagen puntual, se le pone el tamaño al lado, y ese tamaño gana sobre el tope:
+
+```markdown
+![](foto.png){width=40%}        40 % del ancho del texto
+![](foto.png){width=8cm}        también acepta cm, mm o in
+```
 
 ### Escribir los cuadros
 
@@ -195,6 +207,7 @@ metadatos.yaml  <  cabecera de la nota  <  opción -M del comando
 | 4 | Las líneas largas de código se cortan con una flechita (↪). |
 | 5 | Las palabras de 20 caracteres o más sin espacios se cortan entre letras si no entran. |
 | 6 | Define `\needspace`. |
+| 7 | Ancho máximo de las imágenes (`ancho-imagenes`). |
 
 Cada sección está explicada con más detalle en los comentarios del propio archivo.
 
@@ -217,7 +230,7 @@ Es una estimación (error de ±2 % en fórmulas anchas), y se calibró con fórm
 
 | Quiero... | Dónde |
 |:--|:--|
-| Cambiar los márgenes, el tamaño de letra, el interlineado o el idioma de todas las notas | `defaults/metadatos.yaml` |
+| Cambiar los márgenes, el tamaño de letra, el interlineado, el ancho de las imágenes o el idioma de todas las notas | `defaults/metadatos.yaml` |
 | Cambiar los colores del código | `highlight-style` en `defaults/estilo.yaml` (`pandoc --list-highlight-styles` muestra las opciones) |
 | Cambiar los colores de los cuadros | los dos `\definecolor` de la sección 3 de `defaults/estilo.tex` |
 | Más o menos aire en listas o tablas | secciones 1 y 2 de `defaults/estilo.tex` |
