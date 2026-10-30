@@ -15,7 +15,7 @@ pandoc -d estilo nota.md -o nota.pdf
 - **Código que no se sale de la hoja:** las líneas largas se cortan y la continuación empieza con una flechita (↪).
 - **URLs, hashes y rutas largas** en tablas o párrafos también se cortan en vez de salirse de la hoja.
 - **Fórmulas largas que no se salen de la hoja:** las que no entran se parten solas en filas.
-- **Una nota puede cambiar cualquier valor** (márgenes, tamaño de letra...) desde su propia cabecera, sin tocar la configuración.
+- **Una nota puede cambiar los valores del documento** (márgenes, letra, interlineado...) desde su propia cabecera, sin tocar la configuración.
 
 ## Contenido del repositorio
 
@@ -23,11 +23,12 @@ pandoc -d estilo nota.md -o nota.pdf
 pandoc/                      (esta carpeta es ~/.local/share/pandoc)
 ├── defaults/
 │   ├── estilo.yaml          opciones de pandoc; es el único que se nombra al compilar
-│   ├── metadatos.yaml       valores por defecto: idioma, márgenes, tamaño de letra
+│   ├── metadatos.yaml       valores por defecto que una nota puede cambiar: idioma, márgenes, letra...
 │   └── estilo.tex           aspecto en LaTeX: fuentes, emojis, listas, tablas, cuadros, código
 ├── filters/
 │   ├── preambulo.lua        filtro de pandoc: carga estilo.tex, respeta el header-includes y la letra de la nota
-│   └── cortar-formulas.lua  filtro de pandoc: parte en filas las fórmulas que no entran en la hoja
+│   ├── cortar-formulas.lua  filtro de pandoc: parte en filas las fórmulas que no entran en la hoja
+│   └── centrar-imagenes.lua filtro de pandoc: centra las imágenes sueltas (o las alinea a un costado)
 ├── examples/
 │   ├── example_1.md / .pdf  ejemplo básico: todo lo que cubre el estilo
 │   ├── example_2.md / .pdf  tablas y casos que pueden salirse de la hoja
@@ -57,7 +58,7 @@ sudo apt install pandoc texlive-luatex texlive-latex-recommended \
 
 ### 2. Poner el repositorio en la carpeta de datos de pandoc
 
-Pandoc busca sus archivos de configuración en su "carpeta de datos". En Linux es `~/.local/share/pandoc`. Este repositorio **es** esa carpeta:
+Pandoc busca sus archivos de configuración en su "carpeta de datos". En Linux es `~/.local/share/pandoc` (sigue el estándar XDG, como muchos programas). No es una recomendación de pandoc sino el lugar donde busca por defecto: estando ahí, `-d estilo` alcanza, sin escribir la ruta. Si el repositorio estuviera en otro lado, habría que compilar con `pandoc -d /ruta/a/defaults/estilo.yaml ...`. Este repositorio **es** esa carpeta:
 
 ```bash
 git clone https://github.com/Gez-Schegtel/My-Pandoc-Config.git ~/.local/share/pandoc
@@ -127,11 +128,33 @@ O desde la terminal:
 pandoc -d estilo -M date="$(date +%d/%m/%Y)" nota.md -o nota.pdf
 ```
 
+Lo que la nota **no** puede cambiar desde su cabecera son las opciones de `estilo.yaml` (`pdf-engine`, `highlight-style`, `filters`): ver [Opciones y metadatos](#opciones-y-metadatos).
+
 Sobre la letra: sin `mainfont` se usa Latin Modern Roman. El nombre tiene que ser exactamente el que muestra `fc-list | grep -i "nombre"`, y la letra tiene que estar instalada. Si la letra trae sus propios dibujos de algunos emojis o símbolos (DejaVu Sans, por ejemplo), usa esos, en blanco y negro; los que no tenga salen a color.
 
-### Tamaño de las imágenes
+### Imágenes
 
-Ninguna imagen pasa de `ancho-imagenes` (por defecto, el 80 % del ancho del texto, en `metadatos.yaml`). Las más anchas se achican; las más chicas quedan como están. Una nota puede poner su propio valor en la cabecera.
+Una imagen sola en su párrafo sale **centrada** (lo hace el filtro `centrar-imagenes.lua`). Si está dentro de una línea de texto, queda en su lugar dentro del texto.
+
+Con texto entre los corchetes, la imagen pasa a ser una **figura con epígrafe** ("Figura 1: ..."):
+
+```markdown
+![](foto.png)                    centrada, sin epígrafe
+![Esquema del sistema](foto.png) centrada, con "Figura 1: Esquema del sistema"
+```
+
+Para dejar una imagen a la izquierda o a la derecha, se le agrega la clase al lado (se puede combinar con el tamaño):
+
+```markdown
+![](foto.png){.izquierda}
+![](foto.png){.derecha width=40%}
+```
+
+Eso vale para las imágenes sin epígrafe; las figuras con epígrafe siempre salen centradas.
+
+Las figuras con epígrafe las ubica LaTeX: si no entran en lo que queda de la página, pueden pasar a la siguiente y el texto de abajo sube a ocupar el hueco. Las que no tienen epígrafe quedan siempre donde están en el Markdown.
+
+**Tamaño.** Ninguna imagen pasa de `ancho-imagenes` (por defecto, el 80 % del ancho del texto, en `metadatos.yaml`). Las más anchas se achican; las más chicas quedan como están. Una nota puede poner su propio valor en la cabecera.
 
 Para una imagen puntual, se le pone el tamaño al lado, y ese tamaño gana sobre el tope:
 
@@ -179,19 +202,51 @@ Para ver el LaTeX intermedio:
 pandoc -d estilo nota.md -s -t latex -o nota.tex
 ```
 
-### Por qué son tres archivos
+### Por qué está dividida en varios archivos
 
 | Archivo | Qué contiene | Por qué va aparte |
 |:--|:--|:--|
 | `estilo.yaml` | Opciones de pandoc: motor, estilo del código, `metadatos.yaml` y los filtros. | Es el que se nombra al compilar. |
-| `metadatos.yaml` | Valores por defecto: idioma, márgenes, tamaño de letra, enlaces. | Una nota puede pisarlos desde su cabecera. Si estuvieran en `estilo.yaml`, ganarían ellos y la nota no podría cambiarlos. |
-| `estilo.tex` | Código LaTeX: fuentes, emojis, cuadros, listas, tablas, código. | Es otro lenguaje; mezclarlo en un YAML lo haría ilegible. |
+| `metadatos.yaml` | Valores por defecto del documento: idioma, márgenes, letra, interlineado, enlaces, imágenes. | Una nota puede pisarlos desde su cabecera. Si estuvieran dentro de `estilo.yaml` (bajo `metadata:` o `variables:`), ganarían ellos y la nota no podría cambiarlos. |
+| `estilo.tex` | Código LaTeX: fuentes, emojis, cuadros, listas, tablas, código, imágenes. | Es otro lenguaje; mezclarlo en un YAML lo haría ilegible. |
+| `filters/*.lua` | Código Lua que pandoc ejecuta mientras convierte. | Pandoc solo los carga como archivos. |
+
+Así se conectan al compilar:
+
+```
+pandoc -d estilo nota.md -o nota.pdf
+        │
+        └─ estilo.yaml ──┬─ metadatos.yaml        (valores de base; la nota puede pisarlos)
+                         └─ filters/
+                              ├─ preambulo.lua ──► estilo.tex + lo de la nota
+                              ├─ cortar-formulas.lua
+                              └─ centrar-imagenes.lua
+```
 
 `estilo.yaml` los conecta con `${.}`, que significa "la carpeta donde está este archivo". Por eso se puede mover la carpeta entera a cualquier lugar.
 
 `estilo.tex` no lo carga `estilo.yaml` directamente (con `include-in-header`) sino el filtro `filters/preambulo.lua`. Con `include-in-header`, pandoc ignoraba sin avisar el `header-includes` de la cabecera de la nota. El filtro pone primero `estilo.tex` y después lo de la nota, así la nota puede cambiar algo del estilo. También es el que pasa el `mainfont` de la nota a `estilo.tex`, para que la letra nueva conserve los emojis.
 
-### Orden de prioridad de los valores
+### Opciones y metadatos
+
+Pandoc maneja dos tipos de valores, y la diferencia importa para saber qué puede cambiar una nota:
+
+| Tipo | Ejemplos | Dónde se cambian |
+|:--|:--|:--|
+| **Metadatos**: datos del documento que usa la plantilla | `title`, `geometry`, `fontsize`, `mainfont`, `linestretch`, `ancho-imagenes` | En `metadatos.yaml`, en la cabecera de la nota o con `-M` en el comando. |
+| **Opciones**: cómo trabaja pandoc | `pdf-engine`, `highlight-style`, `filters`, `metadata-files` | En `estilo.yaml` o en el comando. **No desde la nota**: pandoc ignora, sin avisar, las opciones escritas en la cabecera de un `.md`. |
+
+(`toc` funciona de las dos formas, por eso `toc: true` en la cabecera sí anda.)
+
+Para cambiar una opción en una sola compilación, se escribe en el comando después de `-d estilo`, y gana:
+
+```bash
+pandoc -d estilo --highlight-style=zenburn nota.md -o nota.pdf
+```
+
+Con `--pdf-engine=xelatex` también compila, pero se pierden los emojis a color y el corte de palabras largas, que dependen de `lualatex`.
+
+### Orden de prioridad de los metadatos
 
 De menor a mayor:
 
@@ -234,7 +289,7 @@ Es una estimación (error de ±2 % en fórmulas anchas), y se calibró con fórm
 | Quiero... | Dónde |
 |:--|:--|
 | Cambiar los márgenes, el tamaño de letra, el interlineado, el ancho de las imágenes o el idioma de todas las notas | `defaults/metadatos.yaml` |
-| Cambiar los colores del código | `highlight-style` en `defaults/estilo.yaml` (`pandoc --list-highlight-styles` muestra las opciones) |
+| Cambiar los colores del código | `highlight-style` en `defaults/estilo.yaml` (`pandoc --list-highlight-styles` muestra las opciones). Para una sola compilación: `--highlight-style=...` en el comando |
 | Cambiar los colores de los cuadros | los dos `\definecolor` de la sección 3 de `defaults/estilo.tex` |
 | Más o menos aire en listas o tablas | secciones 1 y 2 de `defaults/estilo.tex` |
 | Sacar algo del estilo | borrar o comentar su sección en `defaults/estilo.tex` |

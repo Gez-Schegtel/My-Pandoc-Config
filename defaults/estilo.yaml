@@ -75,6 +75,9 @@ metadata-files:
 #                        así pandoc ignoraba el header-includes de la nota.)
 #   cortar-formulas.lua  parte en filas las fórmulas en bloque ($$ ... $$)
 #                        que no entran en el ancho de la hoja.
+#   centrar-imagenes.lua centra las imágenes que están solas en su párrafo
+#                        (o las alinea a un costado con {.izquierda} o {.derecha}).
 filters:
   - ${.}/../filters/preambulo.lua
   - ${.}/../filters/cortar-formulas.lua
+  - ${.}/../filters/centrar-imagenes.lua
