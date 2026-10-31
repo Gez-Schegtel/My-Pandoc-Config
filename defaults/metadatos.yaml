@@ -39,6 +39,11 @@ ancho-imagenes: 80%
 # renglones (los PDF salen algo más largos).
 linestretch: 1.10
 
+# Títulos de nivel 4 y 5 (#### y #####) en una línea propia. Sin esto, LaTeX
+# los pega al texto que sigue ("Título. Texto del párrafo..."). Para volver a
+# ese comportamiento, borrar esta línea o poner "block-headings: false" en la nota.
+block-headings: true
+
 # --- Otras opciones que se suelen poner en la cabecera de UNA nota ------------
 # No van acá porque no se quieren en todos los documentos:
 #   toc: true              índice al principio (toc-depth: 2 limita los niveles)

@@ -175,6 +175,10 @@ Todo bloque de cita de Markdown se dibuja como un cuadro celeste con barra azul:
 
 Esto vale para **todas** las citas: no se puede tener a la vez una cita común y un cuadro.
 
+### Títulos de nivel 4 y 5
+
+Los títulos con cuatro o cinco numerales (`####` y `#####`) salen en una línea propia, con el texto en la línea de abajo. LaTeX, por defecto, los pega al párrafo que sigue ("Título    Texto..."); `metadatos.yaml` lo evita con `block-headings: true`. Para una nota que los quiera pegados al texto, alcanza con poner `block-headings: false` en su cabecera.
+
 ### Salto de página y títulos al pie
 
 Se puede escribir LaTeX suelto en el Markdown:
