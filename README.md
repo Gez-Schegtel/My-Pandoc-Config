@@ -118,7 +118,7 @@ toc: true                 # índice al principio
 numbersections: true      # títulos numerados
 mainfont: Libertinus Serif   # otra letra (los emojis se mantienen)
 ancho-imagenes: 60%       # ninguna imagen más ancha que el 60 % del texto
-header-includes: \usepackage{float}   # LaTeX extra para el preámbulo
+header-includes: \usepackage{cancel}  # LaTeX extra para el preámbulo
 ---
 ```
 
@@ -152,7 +152,7 @@ Para dejar una imagen a la izquierda o a la derecha, se le agrega la clase al la
 
 Eso vale para las imágenes sin epígrafe; las figuras con epígrafe siempre salen centradas.
 
-Las figuras con epígrafe las ubica LaTeX: si no entran en lo que queda de la página, pueden pasar a la siguiente y el texto de abajo sube a ocupar el hueco. Las que no tienen epígrafe quedan siempre donde están en el Markdown.
+Las figuras con epígrafe también quedan **donde están en el Markdown** (sección 8 de `estilo.tex`). LaTeX normalmente las mueve a donde le quedan mejor y sube el texto de abajo a ocupar el hueco; acá eso está desactivado. Si una figura no entra en lo que queda de la página, pasa entera a la siguiente y deja un espacio en blanco al final de la anterior. Para que una nota use el comportamiento normal de LaTeX, en su cabecera: `header-includes: \floatplacement{figure}{tbp}`. Las imágenes sin epígrafe siempre quedan en su lugar.
 
 **Tamaño.** Ninguna imagen pasa de `ancho-imagenes` (por defecto, el 80 % del ancho del texto, en `metadatos.yaml`). Las más anchas se achican; las más chicas quedan como están. Una nota puede poner su propio valor en la cabecera.
 
@@ -270,6 +270,7 @@ metadatos.yaml  <  cabecera de la nota  <  opción -M del comando
 | 5 | Las palabras de 20 caracteres o más sin espacios se cortan entre letras si no entran. |
 | 6 | Define `\needspace`. |
 | 7 | Ancho máximo de las imágenes (`ancho-imagenes`). |
+| 8 | Las figuras con epígrafe quedan donde están en el Markdown, sin moverse. |
 
 Cada sección está explicada con más detalle en los comentarios del propio archivo.
 

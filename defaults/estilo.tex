@@ -13,7 +13,7 @@
 %       pandoc -d estilo nota.md -o nota.pdf
 %
 % CÓMO SE EDITA
-%   Cada sección (0 a 6) es independiente. Para sacar algo del estilo, borrá
+%   Cada sección (0 a 8) es independiente. Para sacar algo del estilo, borrá
 %   o comentá la sección entera. En LaTeX, un comentario empieza con "%".
 %   Para ver el LaTeX completo que genera pandoc (con este archivo ya
 %   insertado en el preámbulo), sin compilar el PDF:
@@ -36,6 +36,7 @@
 %   5) Palabras largas sin espacios (URLs, hashes)
 %   6) \needspace (evitar títulos solos al pie de la página)
 %   7) Ancho máximo de las imágenes (se cambia con "ancho-imagenes")
+%   8) Figuras con epígrafe fijas donde están en el Markdown
 % ==============================================================================
 
 
@@ -282,3 +283,29 @@
     \fi}
 \fi
 \makeatother
+
+
+% ------------------------------------------------------------------------------
+% 8) Figuras con epígrafe fijas donde están en el Markdown
+%
+%    Una imagen con epígrafe, ![Texto](foto.png), es una "figura", y LaTeX la
+%    trata como flotante: la pone donde le queda mejor (por ejemplo, arriba de
+%    la página siguiente) y sube el texto de abajo a ocupar el hueco. Así la
+%    figura puede terminar lejos del párrafo que la menciona.
+%
+%    El paquete float agrega la posición "H" (exactamente acá), y
+%    \floatplacement la pone por defecto en todas las figuras. Si una figura
+%    no entra en lo que queda de la página, pasa entera a la siguiente y deja
+%    un espacio en blanco al final de la anterior.
+%
+%    Las imágenes sin epígrafe no son figuras: siempre quedan en su lugar,
+%    con o sin esto. Las tablas tampoco se ven afectadas (pandoc no las hace
+%    flotantes).
+%
+%    Para que una nota vuelva al comportamiento normal de LaTeX, en su
+%    cabecera:
+%        header-includes: \floatplacement{figure}{tbp}
+%    El paquete float viene en texlive-latex-recommended.
+% ------------------------------------------------------------------------------
+\usepackage{float}
+\floatplacement{figure}{H}
