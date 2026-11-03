@@ -58,6 +58,12 @@ pdf-engine: lualatex
 #   pandoc --list-highlight-styles
 highlight-style: tango
 
+# Formato de entrada: Markdown de pandoc, con cada Enter como salto de renglón
+# (como lo muestran Obsidian, Notion y la mayoría de los editores). Sin esto,
+# pandoc junta en un mismo renglón las líneas que no tienen una línea en
+# blanco entre medio.
+from: markdown+hard_line_breaks
+
 # Archivo con valores por defecto de la plantilla (idioma, márgenes, letra).
 # Se pone acá, y no directamente en este archivo bajo "variables:", a propósito:
 # lo que se escribe en "variables:" PISA a la cabecera de cada nota, y así una
