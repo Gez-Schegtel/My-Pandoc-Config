@@ -22,11 +22,12 @@
 % REQUISITOS (Debian/Ubuntu)
 %   sudo apt install pandoc texlive-luatex texlive-latex-recommended \
 %        texlive-latex-extra texlive-fonts-recommended lmodern \
-%        fonts-noto-color-emoji fonts-dejavu-core
+%        fonts-noto-color-emoji fonts-dejavu-core fonts-dejavu-mono
 %   - texlive-luatex:         el motor lualatex (secciones 0 y 5 lo necesitan).
 %   - texlive-latex-extra:    trae fvextra (sección 4).
 %   - fonts-noto-color-emoji: los emojis a color (sección 0).
-%   - fonts-dejavu-core:      respaldo de símbolos y del código (sección 0).
+%   - fonts-dejavu-core:      respaldo de símbolos en el texto (sección 0).
+%   - fonts-dejavu-mono:      respaldo de árboles y símbolos en el código (sección 0).
 %
 % SECCIONES
 %   0) Fuente principal y emojis (se cambia con "mainfont" en la nota)
@@ -51,9 +52,11 @@
 %      1.º Noto Color Emoji  (emojis a color; "mode=harf" es lo que permite
 %                             dibujarlos en color)
 %      2.º DejaVu Sans       (símbolos como ✓ o →; suele venir instalada)
-%    Los bloques de código tienen su propio respaldo (DejaVu Sans Mono), para
-%    los árboles con ├─ │ └ y las flechas como ↕. La letra del código es Latin
-%    Modern Mono, salvo que la nota ponga otra con "monofont: ...".
+%    Los bloques de código tienen su propio respaldo: primero DejaVu Sans Mono
+%    (para los árboles con ├─ │ └ y las flechas como ↕, en blanco y negro y con
+%    ancho fijo) y segundo Noto Color Emoji (por si hay un emoji dentro del
+%    código). La letra del código es Latin Modern Mono, salvo que la nota ponga
+%    otra con "monofont: ...".
 %
 %    La letra principal es Latin Modern Roman (la clásica de LaTeX), salvo
 %    que la nota ponga otra con "mainfont: ..." en su cabecera. En ese caso,
@@ -75,7 +78,7 @@
     luaotfload.add_fallback("emojis",
       {"Noto Color Emoji:mode=harf;", "DejaVu Sans:"})
     luaotfload.add_fallback("monoletras",
-      {"DejaVu Sans Mono:"})
+      {"DejaVu Sans Mono:", "Noto Color Emoji:mode=harf;"})
   }
   \setmainfont{\fuenteprincipal}[RawFeature={fallback=emojis}]
   % Letra del código con respaldo: Latin Modern Mono (y muchas otras) no trae

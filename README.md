@@ -32,7 +32,8 @@ pandoc/                      (esta carpeta es ~/.local/share/pandoc)
 ├── examples/
 │   ├── example_1.md / .pdf  ejemplo básico: todo lo que cubre el estilo
 │   ├── example_2.md / .pdf  tablas y casos que pueden salirse de la hoja
-│   └── example_3.md / .pdf  apunte real y largo (más de 90 páginas): índice, fórmulas, saltos de página
+│   ├── example_3.md / .pdf  apunte real y largo (más de 90 páginas): índice, fórmulas, saltos de página
+│   └── example_4.md / .pdf  prueba completa: ejercita cada sección del estilo y los tres filtros
 └── README.md
 ```
 
@@ -45,7 +46,7 @@ La carpeta `defaults/` tiene que llamarse así: es el nombre que pandoc busca. L
 ```bash
 sudo apt install pandoc texlive-luatex texlive-latex-recommended \
      texlive-latex-extra texlive-fonts-recommended lmodern \
-     fonts-noto-color-emoji
+     fonts-noto-color-emoji fonts-dejavu-core fonts-dejavu-mono
 ```
 
 | Paquete | Para qué |
@@ -55,6 +56,7 @@ sudo apt install pandoc texlive-luatex texlive-latex-recommended \
 | `texlive-latex-recommended`, `texlive-fonts-recommended`, `lmodern` | Tablas, bloques de código y la letra base. Sin ellos pandoc no genera el PDF. |
 | `texlive-latex-extra` | Trae `fvextra`, que corta las líneas largas de código. |
 | `fonts-noto-color-emoji` | Los emojis a color. |
+| `fonts-dejavu-core`, `fonts-dejavu-mono` | Los símbolos (`✓ →`) en el texto y los árboles (`├ └ │ ─`) y flechas (`↕`) en el código. |
 
 ### 2. Poner el repositorio en la carpeta de datos de pandoc
 
@@ -136,11 +138,11 @@ Sobre la letra: sin `mainfont` se usa Latin Modern Roman, y sin `monofont` (la l
 
 Una imagen sola en su párrafo sale **centrada** (lo hace el filtro `centrar-imagenes.lua`). Si está dentro de una línea de texto, queda en su lugar dentro del texto.
 
-Con texto entre los corchetes, la imagen pasa a ser una **figura con epígrafe** ("Figura 1: ..."):
+Con texto entre los corchetes, la imagen pasa a ser una **figura con epígrafe** (sale solo el texto, sin el "Figura 1:"; ver sección 9 de `estilo.tex`):
 
 ```markdown
 ![](foto.png)                    centrada, sin epígrafe
-![Esquema del sistema](foto.png) centrada, con "Figura 1: Esquema del sistema"
+![Esquema del sistema](foto.png) centrada, con el epígrafe "Esquema del sistema"
 ```
 
 Para dejar una imagen a la izquierda o a la derecha, se le agrega la clase al lado (se puede combinar con el tamaño):
@@ -262,7 +264,7 @@ metadatos.yaml  <  cabecera de la nota  <  opción -M del comando
 
 | Sección | Qué hace |
 |:--|:--|
-| 0 | Letra principal (Latin Modern Roman, o la del `mainfont` de la nota) con respaldo: Noto Color Emoji (emojis) y DejaVu Sans (símbolos). Letra del código (Latin Modern Mono, o la del `monofont` de la nota) con respaldo de DejaVu Sans Mono. |
+| 0 | Letra principal (Latin Modern Roman, o la del `mainfont` de la nota) con respaldo: Noto Color Emoji (emojis) y DejaVu Sans (símbolos). Letra del código (Latin Modern Mono, o la del `monofont` de la nota) con respaldo de DejaVu Sans Mono y Noto Color Emoji. |
 | 1 | Más separación entre los ítems de las listas. |
 | 2 | Más altura en las filas de las tablas. |
 | 3 | Las citas pasan a ser cuadros celestes con barra azul. |
@@ -311,13 +313,14 @@ for f in *.md; do pandoc -d estilo "$f" -o "${f%.md}.pdf"; done
 
 ## Ejemplos
 
-En `examples/` hay tres notas con su PDF ya generado, para ver el resultado sin compilar.
+En `examples/` hay cuatro notas con su PDF ya generado, para ver el resultado sin compilar.
 
 | Ejemplo | Qué muestra |
 |:--|:--|
 | `example_1` | Lo básico: cabecera, texto, emojis, listas, cuadros, tablas y código. Sirve como plantilla para empezar. |
 | `example_2` | Tablas con texto largo, muchas columnas, URLs y hashes sin espacios, y código en línea. Son los casos donde un PDF suele salirse de la hoja. |
 | `example_3` | Un apunte real y largo (más de 90 páginas), con índice, fórmulas, saltos de página, y márgenes, interlineado y letra propios en la cabecera (`mainfont: Libertinus Serif`: para compilarlo hay que tener esa letra instalada). Tarda más en compilar (unos 15 segundos, contra 4 de los otros). |
+| `example_4` | Prueba completa del estilo: recorre una por una las secciones 0 a 9 de `estilo.tex`, las opciones de `estilo.yaml` / `metadatos.yaml` y todos los casos de los tres filtros (`preambulo.lua`, `cortar-formulas.lua` y `centrar-imagenes.lua`). |
 
 ## Problemas frecuentes
 

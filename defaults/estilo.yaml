@@ -44,7 +44,7 @@
 # REQUISITOS (Debian/Ubuntu)
 #   sudo apt install pandoc texlive-luatex texlive-latex-recommended \
 #        texlive-latex-extra texlive-fonts-recommended lmodern \
-#        fonts-noto-color-emoji
+#        fonts-noto-color-emoji fonts-dejavu-core fonts-dejavu-mono
 #   (texlive-latex-extra trae fvextra, que usa estilo.tex para cortar las
 #   líneas largas de código.)
 # ==============================================================================
