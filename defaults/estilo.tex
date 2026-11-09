@@ -13,7 +13,7 @@
 %       pandoc -d estilo nota.md -o nota.pdf
 %
 % CÓMO SE EDITA
-%   Cada sección (0 a 8) es independiente. Para sacar algo del estilo, borrá
+%   Cada sección (0 a 9) es independiente. Para sacar algo del estilo, borrá
 %   o comentá la sección entera. En LaTeX, un comentario empieza con "%".
 %   Para ver el LaTeX completo que genera pandoc (con este archivo ya
 %   insertado en el preámbulo), sin compilar el PDF:
@@ -38,6 +38,7 @@
 %   6) \needspace (evitar títulos solos al pie de la página)
 %   7) Ancho máximo de las imágenes (se cambia con "ancho-imagenes")
 %   8) Figuras con epígrafe fijas donde están en el Markdown
+%   9) Epígrafes sin "Figura N:"
 % ==============================================================================
 
 
@@ -322,3 +323,20 @@
 % ------------------------------------------------------------------------------
 \usepackage{float}
 \floatplacement{figure}{H}
+
+
+% ------------------------------------------------------------------------------
+% 9) Epígrafes sin "Figura N:"
+%
+%    Una figura, ![Consecuencias primarias](foto.png), sale normalmente con
+%    el epígrafe "Figura 1: Consecuencias primarias", y el número sigue en
+%    cada figura. Con esto sale solo el texto: "Consecuencias primarias".
+%    Solo cambia las figuras; las tablas con título no se tocan.
+%
+%    Para que una nota vuelva a numerar las figuras, en su cabecera:
+%        header-includes: \captionsetup[figure]{labelformat=simple}
+%    El paquete caption viene en texlive-latex-recommended (pandoc ya lo
+%    carga en muchas notas; cargarlo otra vez no hace nada).
+% ------------------------------------------------------------------------------
+\usepackage{caption}
+\captionsetup[figure]{labelformat=empty}

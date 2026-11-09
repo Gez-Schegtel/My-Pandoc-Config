@@ -271,6 +271,7 @@ metadatos.yaml  <  cabecera de la nota  <  opción -M del comando
 | 6 | Define `\needspace`. |
 | 7 | Ancho máximo de las imágenes (`ancho-imagenes`). |
 | 8 | Las figuras con epígrafe quedan donde están en el Markdown, sin moverse. |
+| 9 | Los epígrafes de las figuras salen sin "Figura N:", solo con el texto. Una nota puede volver a numerarlas con `header-includes: \captionsetup[figure]{labelformat=simple}`. |
 
 Cada sección está explicada con más detalle en los comentarios del propio archivo.
 
