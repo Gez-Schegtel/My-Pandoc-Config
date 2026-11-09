@@ -130,7 +130,7 @@ pandoc -d estilo -M date="$(date +%d/%m/%Y)" nota.md -o nota.pdf
 
 Lo que la nota **no** puede cambiar desde su cabecera son las opciones de `estilo.yaml` (`pdf-engine`, `highlight-style`, `filters`): ver [Opciones y metadatos](#opciones-y-metadatos).
 
-Sobre la letra: sin `mainfont` se usa Latin Modern Roman. El nombre tiene que ser exactamente el que muestra `fc-list | grep -i "nombre"`, y la letra tiene que estar instalada. Si la letra trae sus propios dibujos de algunos emojis o símbolos (DejaVu Sans, por ejemplo), usa esos, en blanco y negro; los que no tenga salen a color.
+Sobre la letra: sin `mainfont` se usa Latin Modern Roman, y sin `monofont` (la letra del código) se usa Latin Modern Mono. Las dos se pueden cambiar desde la cabecera y conservan su respaldo: los emojis en el texto y los trazos de los árboles (`├ └ │ ─`) en el código. El nombre tiene que ser exactamente el que muestra `fc-list | grep -i "nombre"`, y la letra tiene que estar instalada. Si la letra trae sus propios dibujos de algunos emojis o símbolos (DejaVu Sans, por ejemplo), usa esos, en blanco y negro; los que no tenga salen a color.
 
 ### Imágenes
 
@@ -229,7 +229,7 @@ pandoc -d estilo nota.md -o nota.pdf
 
 `estilo.yaml` los conecta con `${.}`, que significa "la carpeta donde está este archivo". Por eso se puede mover la carpeta entera a cualquier lugar.
 
-`estilo.tex` no lo carga `estilo.yaml` directamente (con `include-in-header`) sino el filtro `filters/preambulo.lua`. Con `include-in-header`, pandoc ignoraba sin avisar el `header-includes` de la cabecera de la nota. El filtro pone primero `estilo.tex` y después lo de la nota, así la nota puede cambiar algo del estilo. También es el que pasa el `mainfont` de la nota a `estilo.tex`, para que la letra nueva conserve los emojis.
+`estilo.tex` no lo carga `estilo.yaml` directamente (con `include-in-header`) sino el filtro `filters/preambulo.lua`. Con `include-in-header`, pandoc ignoraba sin avisar el `header-includes` de la cabecera de la nota. El filtro pone primero `estilo.tex` y después lo de la nota, así la nota puede cambiar algo del estilo. También es el que pasa el `mainfont` y el `monofont` de la nota a `estilo.tex`, para que las letras nuevas conserven su respaldo (emojis y símbolos).
 
 ### Opciones y metadatos
 
@@ -262,7 +262,7 @@ metadatos.yaml  <  cabecera de la nota  <  opción -M del comando
 
 | Sección | Qué hace |
 |:--|:--|
-| 0 | Letra principal (Latin Modern Roman, o la del `mainfont` de la nota) con respaldo: Noto Color Emoji (emojis) y DejaVu Sans (símbolos). |
+| 0 | Letra principal (Latin Modern Roman, o la del `mainfont` de la nota) con respaldo: Noto Color Emoji (emojis) y DejaVu Sans (símbolos). Letra del código (Latin Modern Mono, o la del `monofont` de la nota) con respaldo de DejaVu Sans Mono. |
 | 1 | Más separación entre los ítems de las listas. |
 | 2 | Más altura en las filas de las tablas. |
 | 3 | Las citas pasan a ser cuadros celestes con barra azul. |
@@ -326,7 +326,7 @@ En `examples/` hay tres notas con su PDF ya generado, para ver el resultado sin 
 | `File 'fvextra.sty' not found` | Falta un paquete: `sudo apt install texlive-latex-extra`. |
 | `lualatex not found. Please select a different --pdf-engine...` | Falta el motor: `sudo apt install texlive-luatex`. |
 | Los emojis salen en blanco, en negro o no salen | Falta la fuente: `sudo apt install fonts-noto-color-emoji`. Si la nota tiene `mainfont`, puede ser que esa letra traiga sus propios emojis en blanco y negro. |
-| `The font "X" cannot be found` | La letra del `mainfont` no está instalada o el nombre no coincide: comparalo con `fc-list \| grep -i "X"`. |
+| `The font "X" cannot be found` | La letra del `mainfont` o del `monofont` no está instalada o el nombre no coincide: comparalo con `fc-list \| grep -i "X"`. |
 | `[preambulo] no encontré .../estilo.tex` | `defaults/` y `filters/` tienen que estar uno al lado del otro. |
 | No se genera ningún PDF, error con `lmodern` | `sudo apt install lmodern texlive-fonts-recommended`. |
 | Una fórmula se sale de la hoja | Mirá si el filtro avisó por pantalla. Si tiene un solo término larguísimo o no tiene `+` ni `-` con espacios alrededor, no hay dónde cortar: hay que partirla a mano con `\begin{aligned} ... \\ ... \end{aligned}`. |

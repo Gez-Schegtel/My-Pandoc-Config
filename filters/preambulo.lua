@@ -6,6 +6,7 @@
 --   este orden:
 --     1. Si la nota pide otra letra con "mainfont: ...", la definición
 --        \fuenteprincipal con ese nombre (ver "LA LETRA" más abajo).
+--        Lo mismo con "monofont: ..." (la letra del código): \fuentemono.
 --        Y si tiene "ancho-imagenes: ...", el ancho máximo de las imágenes
 --        (ver "LAS IMÁGENES").
 --     2. defaults/estilo.tex (el aspecto: emojis, cuadros, tablas, código...).
@@ -24,6 +25,9 @@
 --   desaparecerían. Por eso este filtro le saca el "mainfont" a pandoc y le
 --   pasa el nombre a estilo.tex, que carga esa letra con el respaldo.
 --   Sin "mainfont", la letra es Latin Modern Roman.
+--   Con "monofont" (la letra del código) pasa lo mismo: estilo.tex la carga
+--   con un respaldo para los símbolos que ella no trae (├ └ │ ─ ↕). Sin
+--   "monofont", la letra del código es Latin Modern Mono.
 --
 -- LAS IMÁGENES
 --   "ancho-imagenes" es el ancho máximo de las imágenes, como porcentaje del
@@ -67,6 +71,17 @@ function Meta(meta)
       avisar('nombre de letra no válido, se usa la de siempre: ' .. nombre)
     else
       partes:insert(bloque('\\def\\fuenteprincipal{' .. nombre .. '}'))
+    end
+  end
+
+  -- 1a. La letra del código
+  if meta.monofont ~= nil then
+    local nombre = pandoc.utils.stringify(meta.monofont)
+    meta.monofont = nil
+    if nombre == '' or nombre:find('[{}\\%%#]') then
+      avisar('nombre de letra del código no válido, se usa la de siempre: ' .. nombre)
+    else
+      partes:insert(bloque('\\def\\fuentemono{' .. nombre .. '}'))
     end
   end
 
