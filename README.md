@@ -54,7 +54,7 @@ sudo apt install pandoc texlive-luatex texlive-latex-recommended \
 | `pandoc` | El conversor. |
 | `texlive-luatex` | El motor `lualatex` que genera el PDF. Hace falta para los emojis y el corte de palabras largas. |
 | `texlive-latex-recommended`, `texlive-fonts-recommended`, `lmodern` | Tablas, bloques de código y la letra base. Sin ellos pandoc no genera el PDF. |
-| `texlive-latex-extra` | Trae `fvextra`, que corta las líneas largas de código. |
+| `texlive-latex-extra` | Trae `fvextra`, que corta las líneas largas de código, y `enumitem`, que iguala la separación de todas las listas. |
 | `fonts-noto-color-emoji` | Los emojis a color. |
 | `fonts-dejavu-core`, `fonts-dejavu-mono` | Los símbolos (`✓ →`) en el texto y los árboles (`├ └ │ ─`) y flechas (`↕`) en el código. |
 
@@ -265,7 +265,7 @@ metadatos.yaml  <  cabecera de la nota  <  opción -M del comando
 | Sección | Qué hace |
 |:--|:--|
 | 0 | Letra principal (Latin Modern Roman, o la del `mainfont` de la nota) con respaldo: Noto Color Emoji (emojis) y DejaVu Sans (símbolos). Letra del código (Latin Modern Mono, o la del `monofont` de la nota) con respaldo de DejaVu Sans Mono y Noto Color Emoji. |
-| 1 | Más separación entre los ítems de las listas. |
+| 1 | Más separación entre los ítems de las listas (y un poco más entre los subítems, con aire antes y después de cada sublista), la misma con o sin líneas en blanco entre los ítems (usa `enumitem`). |
 | 2 | Más altura en las filas de las tablas. |
 | 3 | Las citas pasan a ser cuadros celestes con barra azul. |
 | 4 | Las líneas largas de código se cortan con una flechita (↪). |
@@ -327,7 +327,7 @@ En `examples/` hay cuatro notas con su PDF ya generado, para ver el resultado si
 | Síntoma | Causa y solución |
 |:--|:--|
 | `estilo.yaml: ... does not exist` | Pandoc no encuentra el archivo. Revisá que los archivos estén en `~/.local/share/pandoc/defaults/` y que la carpeta de datos sea esa (`pandoc --version \| grep -i "user data"`). Si muestra otra, ver el paso 2 de la instalación. |
-| `File 'fvextra.sty' not found` | Falta un paquete: `sudo apt install texlive-latex-extra`. |
+| `File 'fvextra.sty' not found` o `File 'enumitem.sty' not found` | Falta un paquete: `sudo apt install texlive-latex-extra`. |
 | `lualatex not found. Please select a different --pdf-engine...` | Falta el motor: `sudo apt install texlive-luatex`. |
 | Los emojis salen en blanco, en negro o no salen | Falta la fuente: `sudo apt install fonts-noto-color-emoji`. Si la nota tiene `mainfont`, puede ser que esa letra traiga sus propios emojis en blanco y negro. |
 | `The font "X" cannot be found` | La letra del `mainfont` o del `monofont` no está instalada o el nombre no coincide: comparalo con `fc-list \| grep -i "X"`. |

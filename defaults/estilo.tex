@@ -24,7 +24,7 @@
 %        texlive-latex-extra texlive-fonts-recommended lmodern \
 %        fonts-noto-color-emoji fonts-dejavu-core fonts-dejavu-mono
 %   - texlive-luatex:         el motor lualatex (secciones 0 y 5 lo necesitan).
-%   - texlive-latex-extra:    trae fvextra (sección 4).
+%   - texlive-latex-extra:    trae fvextra (sección 4) y enumitem (sección 1).
 %   - fonts-noto-color-emoji: los emojis a color (sección 0).
 %   - fonts-dejavu-core:      respaldo de símbolos en el texto (sección 0).
 %   - fonts-dejavu-mono:      respaldo de árboles y símbolos en el código (sección 0).
@@ -95,12 +95,32 @@
 % ------------------------------------------------------------------------------
 % 1) Listas con más aire entre ítems
 %
-%    Pandoc usa \tightlist en las listas "apretadas" (sin líneas en blanco
-%    entre ítems) y las deja con separación 0. Acá se les da 0,55 em
-%    (aprox. media línea) entre ítems. Para más o menos aire, cambiar ese número.
+%    La separación se define con \setlist (del paquete enumitem) y vale
+%    para todas las listas, con o sin líneas en blanco entre los ítems en el
+%    Markdown: así una lista sale igual en el PDF de las dos formas.
+%      - Ítems:     0,55 em entre uno y otro (aprox. media línea).
+%      - Subítems (nivel 2 en adelante): 0,8 em entre uno y otro, y 0,8 em
+%        de aire antes y después de la sublista (topsep), para que no quede
+%        pegada al texto del ítem de arriba ni al ítem de abajo. OJO: LaTeX
+%        usa el mismo valor arriba y abajo; no se puede cambiar uno solo.
+%      - Antes y después de la lista: 0,18 em (topsep del nivel 1). Parece
+%        poco, pero se suma al espacio que ya deja el párrafo: así, del
+%        párrafo al primer ítem hay la misma distancia que del ítem a su
+%        subítem, y lo mismo del último ítem (o subítem) al párrafo de abajo.
+%        Si cambiás el 0.8em de los subítems, ajustá también este número.
+%    parsep=0pt evita que se sume además el espacio entre párrafos.
+%
+%    Pandoc pone \tightlist en las listas "apretadas" (sin líneas en blanco
+%    entre ítems) para dejarlas con separación 0. Se anula (queda vacío),
+%    porque si no pisaría los valores de acá.
+%
+%    Para más o menos aire, cambiar los números de los dos \setlist.
 % ------------------------------------------------------------------------------
-\renewcommand{\tightlist}{%
-  \setlength{\itemsep}{0.55em}\setlength{\parskip}{0pt}}
+\usepackage{enumitem}
+\setlist{itemsep=0.55em, parsep=0pt}
+\setlist[1]{topsep=0.18em, partopsep=0pt}
+\setlist[2,3,4]{itemsep=0.8em, topsep=0.8em, partopsep=0pt}
+\renewcommand{\tightlist}{}
 
 
 % ------------------------------------------------------------------------------
