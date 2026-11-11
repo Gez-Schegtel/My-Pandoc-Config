@@ -6,6 +6,7 @@
 --   este orden:
 --     1. Si la nota pide otra letra con "mainfont: ...", la definición
 --        \fuenteprincipal con ese nombre (ver "LA LETRA" más abajo).
+--        Lo mismo con "sansfont: ..." (la letra sin serifa): \fuentesans.
 --        Lo mismo con "monofont: ..." (la letra del código): \fuentemono.
 --        Y si tiene "ancho-imagenes: ...", el ancho máximo de las imágenes
 --        (ver "LAS IMÁGENES").
@@ -25,6 +26,9 @@
 --   desaparecerían. Por eso este filtro le saca el "mainfont" a pandoc y le
 --   pasa el nombre a estilo.tex, que carga esa letra con el respaldo.
 --   Sin "mainfont", la letra es Latin Modern Roman.
+--   Con "sansfont" (la letra sin serifa, usada en títulos de scrartcl) pasa
+--   lo mismo: estilo.tex la carga con el respaldo de emojis. Sin "sansfont",
+--   es Latin Modern Sans.
 --   Con "monofont" (la letra del código) pasa lo mismo: estilo.tex la carga
 --   con un respaldo para los símbolos que ella no trae (├ └ │ ─ ↕). Sin
 --   "monofont", la letra del código es Latin Modern Mono.
@@ -74,7 +78,18 @@ function Meta(meta)
     end
   end
 
-  -- 1a. La letra del código
+  -- 1a. La letra sans (títulos y encabezados en scrartcl)
+  if meta.sansfont ~= nil then
+    local nombre = pandoc.utils.stringify(meta.sansfont)
+    meta.sansfont = nil
+    if nombre == '' or nombre:find('[{}\\%%#]') then
+      avisar('nombre de letra sans no válido, se usa la de siempre: ' .. nombre)
+    else
+      partes:insert(bloque('\\def\\fuentesans{' .. nombre .. '}'))
+    end
+  end
+
+  -- 1b. La letra del código
   if meta.monofont ~= nil then
     local nombre = pandoc.utils.stringify(meta.monofont)
     meta.monofont = nil
@@ -85,7 +100,7 @@ function Meta(meta)
     end
   end
 
-  -- 1b. El ancho máximo de las imágenes
+  -- 1c. El ancho máximo de las imágenes
   if meta['ancho-imagenes'] ~= nil then
     local texto = pandoc.utils.stringify(meta['ancho-imagenes'])
     local numero = tonumber((texto:gsub('%s', ''):gsub('%%$', '')))

@@ -63,12 +63,17 @@
 %    el filtro filters/preambulo.lua define \fuenteprincipal con ese
 %    nombre, y acá se carga esa letra, también con el respaldo de emojis.
 %    (Sin el filtro, pandoc cargaría la letra por su cuenta y sin emojis.)
+%    La letra sin serifa (para títulos en scrartcl o con "sansfont: ...")
+%    también se carga con respaldo de emojis (Latin Modern Sans por defecto).
 %
 %    Con xelatex no hay respaldo (es una función de lualatex): se usa la letra
 %    pedida, sin emojis. Con pdflatex no se toca nada.
 % ------------------------------------------------------------------------------
 \ifdefined\fuenteprincipal\else
   \def\fuenteprincipal{Latin Modern Roman}
+\fi
+\ifdefined\fuentesans\else
+  \def\fuentesans{Latin Modern Sans}
 \fi
 \ifdefined\fuentemono\else
   \def\fuentemono{Latin Modern Mono}
@@ -81,6 +86,7 @@
       {"DejaVu Sans Mono:", "Noto Color Emoji:mode=harf;"})
   }
   \setmainfont{\fuenteprincipal}[RawFeature={fallback=emojis}]
+  \setsansfont{\fuentesans}[RawFeature={fallback=emojis}]
   % Letra del código con respaldo: Latin Modern Mono (y muchas otras) no trae
   % los trazos de los árboles (├ └ │ ─) ni flechas como ↕; esos salen de
   % DejaVu Sans Mono. Si la nota pone "monofont: ...", se usa esa letra.
@@ -88,6 +94,7 @@
 \else
   \ifdefined\setmainfont
     \setmainfont{\fuenteprincipal}
+    \setsansfont{\fuentesans}
   \fi
 \fi
 
